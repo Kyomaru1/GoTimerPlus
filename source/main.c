@@ -69,7 +69,7 @@
 
 #include "soundbank.h"
 #include "soundbank_bin.h"
-// #include "top_screen_timer.h"
+#include "topscreentimer.h"
 //---------------------------------------------------------------------------------
 int main(void) {
 //---------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ int main(void) {
 	// consoleDebugInit(DebugDevice_NOCASH);
 	// consoleDemoInit();
 	videoSetMode(MODE_5_2D);
-	vramSetBanA(VRAM_A_MAIN_BG_0x06000000);
+	vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
 
 	consoleInit(
 		NULL,
@@ -107,9 +107,9 @@ int main(void) {
 
 	mm_sfxhand amb = 0;
 
-	// int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
-	// dmaCopy(top_screen_timerBitmap, bgGetGfxPtr(bg3), 256*256);
-	// dmaCopy(top_screen_timerPal, BG_PALETTE, 256*2);
+	int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+	dmaCopy(topscreentimerBitmap, bgGetGfxPtr(bg3), 256*256);
+	
 
 	do {
 		int keys_pressed, keys_released;
