@@ -69,12 +69,16 @@
 
 #include "soundbank.h"
 #include "soundbank_bin.h"
+// #include "top_screen_timer.h"
 //---------------------------------------------------------------------------------
 int main(void) {
 //---------------------------------------------------------------------------------
 	
 	// consoleDebugInit(DebugDevice_NOCASH);
 	// consoleDemoInit();
+	videoSetMode(MODE_5_2D);
+	vramSetBanA(VRAM_A_MAIN_BG_0x06000000);
+
 	consoleInit(
 		NULL,
 		0,
@@ -97,13 +101,15 @@ int main(void) {
 		0,
 	};
 
-	
-
 	iprintf("\x1b[2J");
 	iprintf("\x1b[0;8HMaxMod Audio Demo");
 	iprintf("\x1b[3;0HPress any key for beep");
 
 	mm_sfxhand amb = 0;
+
+	// int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+	// dmaCopy(top_screen_timerBitmap, bgGetGfxPtr(bg3), 256*256);
+	// dmaCopy(top_screen_timerPal, BG_PALETTE, 256*2);
 
 	do {
 		int keys_pressed, keys_released;
