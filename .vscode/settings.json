@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "maxmod9.h": "c",
+        "mm_types.h": "c",
+        "soundbank_bin.h": "c",
+        "soundbank.h": "c"
+    }
+}
