@@ -3,15 +3,23 @@
 GoTimerPlus:
 	Stylized Go Game Timer for playing the game of Go;
 	Top Screen will show timer outputs for each side:
-					| 00:00 |
-					---------
-		-------------   -------------
-		| 000:00:00 |   | 000:00:00 |
-		|===========|   |===========|
+
+	-------------------------------
+	|						 23:59|
+	|  Player 1: O+               |
+	|  88:88:88                   |
+	|  ------------               |
+	|							  |
+	|  Player 2: O+               |
+	|  88:88:88                   |
+	|  ------------               |
+	|  							  |
+	|  Turn: 999               *  |
+	-------------------------------
 
 	underneath the numbers in the timer display is a line, that flashes to 
 	indicate the current active timer display. each blink should correspond to 
-	1 (one) second
+	2 (two) seconds: 1 sec visible, 1 second not visible.
 
 	bottom screen will have the controls for setting up the timer;
 
@@ -26,13 +34,26 @@ GoTimerPlus:
 	Graphics for the top screen will be styled to try and match that of a real
 	digital game timer; skeumorphic.
 		- segmented digital LCD display graphics.
-			888:88:88   888:88:88
+			888:88:88
 
 	Application will have the ability to save the user's settings for later use
 	including setting 3 custom timer options. Will also include built in the
 	standard time settings for a game of go
+		- Standard times include:
+			- NHK time;
+				- 30 sec main time
+				- JBY: 10 periods of 1 minute each.
+			- Blitz
+				- 15 minutes default
+				- No overtime
+			- Absolute Timing
+				- Time configurable
+				- JBY, CBY, or No overtime
+				- This one is basically what is used to create custom profiles
+					- Once options selected, SAVE button can be used to save to
+					  one of the memory slots.
 
-		* Japanese byo-yomi
+		* Japanese byo-yomi (JBY)
 			- <Maintime> + <Number of periods> of <amount of overtime per period>
 			-example:
 				- 30 minutes + 10 periods of 60 seconds
@@ -40,11 +61,11 @@ GoTimerPlus:
 					make a move.
 					- If a move is not made within that amount of time, the
 						period is lost, and the next period is started.
-	v				- making a move before the time runs out resets the period
+					- making a move before the time runs out resets the period
 					- If no periods are left, that player loses on time.
-		* Canadian byo-yomi
+		* Canadian byo-yomi (CBY)
 			- <Maintime> + <Number of moves> moves in <amount of overtime>
-		s	- example:
+			- example:
 				- 60 minutes + 20 moves in 5 minutes
 					- Player has n seconds/minutes to make x number of moves
 						- If player makes all those moves within n time,
@@ -55,6 +76,13 @@ GoTimerPlus:
 
 	GRAPHICS NEEDED:
 		- Segmented Display Sprites
+		- UI elements
+			- Buttons
+			- Check buttons
+			- Up/Down buttons for adjusting time amounts.
+		- Top Screen background tiles
+		- Bottom screen background tiles
+
 
 
 	AUDIO NEEDED:
