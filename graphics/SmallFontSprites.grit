@@ -1,0 +1,12 @@
+# tiled image
+-gt
+
+# height and witdth of meta tiles (8*16) or (8*1)x(8*2)
+-Mw1
+-Mh2
+
+# Set the bit depth to 4 (16 colors)
+-gB4
+
+# Set transparent color
+-gT ff00bb

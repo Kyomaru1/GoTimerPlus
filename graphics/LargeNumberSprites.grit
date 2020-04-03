@@ -1,0 +1,12 @@
+#tiled image
+-gt
+
+#height and width of meta tiles (16*32) or (8*2)x(8*4)
+-Mw2
+-Mh4
+
+#4bit color depth (16 colors [to be safe; can always go down, since just text])
+-gB4
+
+# Set transparent color
+-gT ff00bb
