@@ -402,6 +402,10 @@ int main(void) {
 		else if(keys_pressed & KEY_START && timePause && playerTurn != -1)
 			timePause = false;
 
+		//debug: SELECT is to break for now;
+		if(keys_pressed & KEY_SELECT)
+			break;
+
 		
 
 		
