@@ -10,6 +10,7 @@ endif
 GAME_TITLE     := Go Timer+
 GAME_SUBTITLE1 := KYOStudios
 GAME_SUBTITLE2 := 
+GAME_ICON := 
 
 include $(DEVKITARM)/ds_rules
 
