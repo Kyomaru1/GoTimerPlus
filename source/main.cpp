@@ -104,9 +104,34 @@ GoTimerPlus:
 #include "font6x8.h"
 #include "TimerSystem.h"
 
+#define POS2IDX(x, y)    (x + (y*32))
 #define TIMER_SPEED (BUS_SPEED/1024)
+#define TILE_FLIP_NONE    (0 << 10)
+#define TILE_FLIP_X       (1 << 10)
+#define TILE_FLIP_Y       (2 << 10)
+#define TILE_FLIP_XY      (TILE_FLIP_X | TILE_FLIP_Y)
+#define TILE_PAL(n) ((n) << 12)
 //---------------------------------------------------------------------------------
 //static const int DMA_CHANNEL = 3;
+
+u16 topMap_timerBG[16*16] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 | TILE_FLIP_X, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+	0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//last visible line on screen
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
 
 typedef struct 
 {
@@ -143,6 +168,7 @@ typedef struct
 	u16* sprite_gfx_mem;
 	u8* frame_gfx;
 } Button;
+
 
 
 
@@ -191,14 +217,17 @@ void initBackgrounds(){
 	bgInit(2, BgType_Rotation, BgSize_R_256x256, true, false);
 	bgInit(0, BgType_Text8bpp, BgSize_T_256x256, true, false);
 
-	bgInitSub(3, BgType_ExRotation, BgSize_ER_256x256, true, false);
-	bgInitSub(2, BgType_Rotation, BgSize_R_256x256, true, false);
-	bgInitSub(0, BgType_Text8bpp, BgSize_T_256x256, true, false);
+	// bgInitSub(3, BgType_ExRotation, BgSize_ER_256x256, true, false);
+	// bgInitSub(2, BgType_Rotation, BgSize_R_256x256, true, false);
+	// bgInitSub(0, BgType_Text8bpp, BgSize_T_256x256, true, false);
 
 }
 
 void displayTopScreenTimerBackground() {
 	// tiles for top screen background
+	memcpy((void*) BG_TILE_RAM(1), UiSpritesTiles, UiSpritesTilesLen);
+	memcpy((void*) BG_MAP_RAM(0), topMap_timerBG, 16*16);
+	memcpy((void*) BG_PALETTE, UiSpritesPal, UiSpritesPalLen);
 }
 
 void displayTopScreenTextLayer(){
@@ -213,13 +242,13 @@ void initVideo(){
 		VRAM_D_LCD);
 
 	videoSetMode(
-		MODE_4_2D |
+		MODE_2_2D |
 		DISPLAY_BG2_ACTIVE |
 		DISPLAY_BG3_ACTIVE
 	);
 
 	videoSetModeSub(
-		MODE_4_2D |
+		MODE_2_2D |
 		DISPLAY_BG2_ACTIVE
 	);
 }
@@ -262,8 +291,8 @@ int main(void) {
 	// int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
 	// dmaCopyHalfWords(DMA_CHANNEL, topscreentimerBitmap, bgGetGfxPtr(bg3), topscreentimerBitmapLen);
 	// initVideo();
-	// initBackgrounds();
-	// displayTopScreenTimerBackground();
+	initBackgrounds();
+	displayTopScreenTimerBackground();
 	// displayTopScreenTextLayer();
 	//uint64 ticks= 0;
 	uint16 blank_count = 0;
@@ -320,7 +349,8 @@ int main(void) {
 			keys_pressed & KEY_B ||
 			keys_pressed & KEY_X ||
 			keys_pressed & KEY_Y
-			) && playerTurn == 0){
+			) && playerTurn == 0
+			&& !leftIsP1){
 			playerTurn = 1;
 			// consumedVblank_P1 = blank_count;
 			// blank_count = consumedVblank_P2;
@@ -334,7 +364,8 @@ int main(void) {
 			keys_pressed & KEY_B ||
 			keys_pressed & KEY_X ||
 			keys_pressed & KEY_Y
-			) && playerTurn == 1){
+			) && playerTurn == 1
+			&& leftIsP1){
 			playerTurn = 0;
 			// consumedVblank_P1 = blank_count;
 			// blank_count = consumedVblank_P2;
@@ -350,7 +381,8 @@ int main(void) {
 			keys_pressed & KEY_UP ||
 			keys_pressed & KEY_RIGHT ||
 			keys_pressed & KEY_DOWN
-			) && playerTurn == 0){
+			) && playerTurn == 0
+			&& leftIsP1){
 			playerTurn = 1;
 			// consumedVblank_P2 = blank_count;
 			// blank_count = consumedVblank_P1;
@@ -364,7 +396,8 @@ int main(void) {
 			keys_pressed & KEY_UP ||
 			keys_pressed & KEY_RIGHT ||
 			keys_pressed & KEY_DOWN
-			) && playerTurn == 1){
+			) && playerTurn == 1
+			&& !leftIsP1){
 			playerTurn = 0;
 			// consumedVblank_P2 = blank_count;
 			// blank_count = consumedVblank_P1;
