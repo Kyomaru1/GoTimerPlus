@@ -103,6 +103,8 @@ GoTimerPlus:
 #include "font.h"
 #include "font6x8.h"
 #include "TimerSystem.h"
+#include "TopBackground.h"
+#include "graphics.h"
 
 #define POS2IDX(x, y)    (x + (y*32))
 #define TIMER_SPEED (BUS_SPEED/1024)
@@ -114,24 +116,6 @@ GoTimerPlus:
 //---------------------------------------------------------------------------------
 //static const int DMA_CHANNEL = 3;
 
-u16 topMap_timerBG[16*16] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 | TILE_FLIP_X, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//last visible line on screen
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
 
 typedef struct 
 {
@@ -144,33 +128,7 @@ typedef struct
 	int state;
 	int anim_frame;
 	
-} MainTimeDigit;
-
-typedef struct
-{
-	int x;
-	int y;
-
-	u16* sprite_gfx_mem;
-	u8* frame_gfx;
-
-	int state;
-	int anim_frame;
-
-} CheckButton;
-
-typedef struct
-{
-	int x,
-		y,
-		state,
-		anim_frame;
-	u16* sprite_gfx_mem;
-	u8* frame_gfx;
-} Button;
-
-
-
+} Sprite;
 
 enum SpriteStateDigit {
 	S_ZERO  = 0,
@@ -185,13 +143,13 @@ enum SpriteStateDigit {
 	S_NINE  = 9
 };
 
-void animateMainTimeDigit(MainTimeDigit *digit){
+void animateMainTimeDigit(Sprite *digit){
 	int frame = digit -> anim_frame + digit -> state;
 	u8* offset = digit-> frame_gfx + frame * 16*32;
 	dmaCopy(offset, digit->sprite_gfx_mem, 16*32);
 }
 
-void initMainTimeDigit(MainTimeDigit *digit, u8* gfx){
+void initMainTimeDigit(Sprite *digit, u8* gfx){
 	digit -> sprite_gfx_mem = oamAllocateGfx(
 		&oamMain, 
 		SpriteSize_16x32, 
@@ -225,9 +183,10 @@ void initBackgrounds(){
 
 void displayTopScreenTimerBackground() {
 	// tiles for top screen background
-	memcpy((void*) BG_TILE_RAM(1), UiSpritesTiles, UiSpritesTilesLen);
-	memcpy((void*) BG_MAP_RAM(0), topMap_timerBG, 16*16);
-	memcpy((void*) BG_PALETTE, UiSpritesPal, UiSpritesPalLen);
+
+	memcpy((void*) BG_TILE_RAM(1), TopBackgroundBitmap, TopBackgroundBitmapLen);
+	memcpy((void*) BG_PALETTE, TopBackgroundPal, TopBackgroundPalLen );
+	
 }
 
 void displayTopScreenTextLayer(){
@@ -244,13 +203,15 @@ void initVideo(){
 	videoSetMode(
 		MODE_2_2D |
 		DISPLAY_BG2_ACTIVE |
-		DISPLAY_BG3_ACTIVE
+		DISPLAY_BG3_ACTIVE |
+		DISPLAY_BG0_ACTIVE
 	);
 
 	videoSetModeSub(
 		MODE_2_2D |
 		DISPLAY_BG2_ACTIVE
 	);
+	oamInit(&oamMain, SpriteMapping_Bmp_1D_256, false);
 }
 
 void dsi_callback_quitToMenu(){
@@ -291,8 +252,15 @@ int main(void) {
 	// int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
 	// dmaCopyHalfWords(DMA_CHANNEL, topscreentimerBitmap, bgGetGfxPtr(bg3), topscreentimerBitmapLen);
 	// initVideo();
-	initBackgrounds();
-	displayTopScreenTimerBackground();
+	//initBackgrounds();
+	
+	bool graphicsInited = false;
+
+	if(!graphicsInited){
+		graphicsInit();
+		graphicsInited = true;
+	}
+
 	// displayTopScreenTextLayer();
 	//uint64 ticks= 0;
 	uint16 blank_count = 0;
