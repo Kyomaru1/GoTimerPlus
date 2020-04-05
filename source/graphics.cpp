@@ -8,6 +8,7 @@
 
 int topBgTexID;
 glImage topBgImage[(256/16) *(256/16)];
+glImage subBgImage[(256/16) * (256/16)];
 
 void vramcpy_ui (void* dest, const void* src, int size) 
 {
@@ -87,7 +88,7 @@ void graphicsInit()
     lcdMainOnTop();
 
     vramSetBankC(VRAM_C_SUB_BG_0x06200000);
-	REG_BG0CNT_SUB = BG_MAP_BASE(0) | BG_COLOR_256 | BG_TILE_BASE(2);
+	//REG_BG0CNT_SUB = BG_MAP_BASE(0) | BG_COLOR_256 | BG_TILE_BASE(2);
 	u16* bgMapTop = (u16*)SCREEN_BASE_BLOCK_SUB(0);
 	for (int i = 0; i < CONSOLE_SCREEN_WIDTH*CONSOLE_SCREEN_HEIGHT; i++) {
 		bgMapTop[i] = (u16)i;
