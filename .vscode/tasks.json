@@ -1,0 +1,75 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Make Project",
+            "type": "shell",
+            "command": "make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "make clean",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Run ROM (Desmume)",
+            "type": "shell",
+            "command": "desmume ${workspaceFolder}/GoTimerPlus.nds",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "Make Project",
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Copy Build to SD Card",
+            "type": "shell",
+            "command": ".vscode/copy_to_sd_linux.sh",
+            "args": [
+                "${workspaceFolder}",
+                "${input:password}"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "password",
+            "description": "Root Password",
+            "password": true,
+            "type":"promptString"
+        }
+    ]
+}
