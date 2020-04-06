@@ -113,6 +113,9 @@ GoTimerPlus:
 #define TILE_FLIP_Y       (2 << 10)
 #define TILE_FLIP_XY      (TILE_FLIP_X | TILE_FLIP_Y)
 #define TILE_PAL(n) ((n) << 12)
+
+
+const int32 TWENTYFOUR_HOURS_IN_MS = 0x5265C00;
 //---------------------------------------------------------------------------------
 //static const int DMA_CHANNEL = 3;
 
