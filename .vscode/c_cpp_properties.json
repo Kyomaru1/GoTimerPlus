@@ -11,9 +11,8 @@
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${default}",
-                "${workspaceFolder}/build",
-                "${workspaceFolder}/build",
-                "/opt/devkitpro/libnds/include"
+                "/opt/devkitpro/libnds/include",
+                "${workspaceFolder}/build"
             ]
         }
     ],
