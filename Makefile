@@ -10,7 +10,7 @@ endif
 GAME_TITLE     := Go Timer+
 GAME_SUBTITLE1 := KYOStudios
 GAME_SUBTITLE2 := 
-GAME_ICON := 
+GAME_ICON :=
 
 include $(DEVKITARM)/ds_rules
 
@@ -32,7 +32,7 @@ INCLUDES := include
 DATA     := data
 GRAPHICS := graphics
 AUDIO    := audio
-ICON     :=
+ICON     := icon.bmp
 
 # specify a directory which contains the nitro filesystem
 # this is relative to the Makefile
