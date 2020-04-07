@@ -12,7 +12,8 @@
             "includePath": [
                 "${default}",
                 "/opt/devkitpro/libnds/include",
-                "${workspaceFolder}/build"
+                "${workspaceFolder}/build",
+                "/opt/devkitpro/devkitARM/**"
             ]
         }
     ],

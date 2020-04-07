@@ -94,6 +94,7 @@ GoTimerPlus:
 #include <nds.h>
 #include <stdio.h>
 #include <maxmod9.h>
+#include "common/nitrofs.h"
 
 #include "soundbank.h"
 #include "soundbank_bin.h"

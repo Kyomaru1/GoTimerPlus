@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "maxmod9.h": "c"
+        "maxmod9.h": "c",
+        "nitrofs.h": "c",
+        "stdio.h": "c"
     }
 }
