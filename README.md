@@ -49,3 +49,6 @@ Included is the `.vscode` file where my setup is stored. Included are a few task
 This is a hobby/passion project. As such, development is mostly handled by myself. I don't know much about NDS Programming, let alone C++ programming. My background is in C#, so I'm not used to this kind of low level code. But, I'm using this as a learning experience with something I enjoy (Go/Baduk/Weiqi)
 
 If you'd like to contribute, please feel free to branch and submit merge requests as necessary. I'm going to update this README file with an image to describe the vision that I'm seeking to create, so if you have ideas how to get it where it needs to be, I'm more than happy for the contributions. Help is not expected however.
+
+### Sources:
+***Banner Image***: https://www.reddit.com/r/baduk/comments/14ub12/the_ear_reddening_move_minimalist_wallpaper/
