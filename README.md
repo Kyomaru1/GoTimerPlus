@@ -1,3 +1,5 @@
+![GoTimerPlusBanner](GTP_Banner.png)
+
 # GoTimerPlus
 
 This is a homebrew Nintendo DS application designed to be used as a timer for playing games such as Go, Chess and Shogi. Features of the application that are hoped to be supported in the future:
