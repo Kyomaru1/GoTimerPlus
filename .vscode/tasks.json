@@ -50,7 +50,7 @@
             "type": "shell",
             "command": ".vscode/copy_to_sd_linux.sh",
             "args": [
-                "${workspaceFolder}",
+                "${workspaceFolder}/GoTimerPlus.nds",
                 "${input:password}"
             ],
             "problemMatcher": [],

@@ -42,7 +42,7 @@ txtrst='\e[0m'    # Text Reset
 USER=$(whoami)
 if [ -d /media/${USER}/${SD_CARD_NAME} ]
 then
-    printf $2"\n" | sudo -S cp -u $1/GoTimerPlus.nds /media/${USER}/${SD_CARD_NAME}/roms/nds
+    printf $2"\n" | sudo -S cp -u $1 /media/${USER}/${SD_CARD_NAME}/roms/nds
     
     if [ $? -ne 0 ] 
     then
