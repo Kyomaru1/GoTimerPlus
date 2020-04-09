@@ -119,7 +119,19 @@ GoTimerPlus:
 const int32 TWENTYFOUR_HOURS_IN_MS = 0x5265C00;
 //---------------------------------------------------------------------------------
 //static const int DMA_CHANNEL = 3;
+uint16 blank_count = 0;
+Time p1mainTime = Time(0, 29, 10);
+Time p2mainTime = Time(0, 30, 0);
+// uint16 mainTime_P1 = 15;
+// uint16 mainTime_P2 = 15;
+// uint8 consumedVblank_P1 = blank_count,
+// 	  consumedVblank_P2 = blank_count;
 
+int8 playerTurn = -1;
+bool beepPlaying = false;
+bool timePause = true;
+bool leftIsP1 = false;
+uint8 turnNumber = 1;
 
 typedef struct 
 {
@@ -185,11 +197,35 @@ void initBackgrounds(){
 
 }
 
+void writeToConsole(){
+	printf("\x1b[2J");
+		// printf("%d\n",mainTime_P1);
+		// printf("%d\n",mainTime_P2);
+		printf("Player 1:\n");
+		printf("%02d:%02d:%02d\n", p1mainTime.hours, p1mainTime.minutes, p1mainTime.seconds);
+		printf("\nPlayer 2:\n");
+		printf("%02d:%02d:%02d\n", p2mainTime.hours, p2mainTime.minutes, p2mainTime.seconds);
+		printf("\n\nPlayerTurn: %d", playerTurn);
+		if(timePause){
+			printf("\nTime is Paused");
+			printf("\nTurn Number: %03d\n", turnNumber);
+		}
+		else
+			printf("\n\nTurn Number: %03d\n", turnNumber);
+		printf("\nP1 Consumed Vblank: %d\n", p1mainTime.vblankConsumed);
+		printf("P2 Consumed Vblank: %d\n", p2mainTime.vblankConsumed);
+		printf("%d\n", blank_count);
+		if(leftIsP1 && playerTurn != -1)
+			printf("Player 1 is D-Pad Side");
+		else if(!leftIsP1 && playerTurn != -1)
+			printf("Player 1 is ABXY Side");
+}
+
 void displayTopScreenTimerBackground() {
 	// tiles for top screen background
 
-	memcpy((void*) BG_TILE_RAM(1), TopBackgroundBitmap, TopBackgroundBitmapLen);
-	memcpy((void*) BG_PALETTE, TopBackgroundPal, TopBackgroundPalLen );
+	// memcpy((void*) BG_TILE_RAM(1), TopBackgroundBitmap, TopBackgroundBitmapLen);
+	// memcpy((void*) BG_PALETTE, TopBackgroundPal, TopBackgroundPalLen );
 	
 }
 
@@ -229,7 +265,7 @@ int main(void) {
 	powerOn(POWER_ALL_2D);
 
 	// consoleDebugInit(DebugDevice_NOCASH);
-	consoleDemoInit();
+	// consoleDemoInit();
 	// consoleInit(
 	// 	NULL,
 	// 	0,
@@ -267,19 +303,7 @@ int main(void) {
 
 	// displayTopScreenTextLayer();
 	//uint64 ticks= 0;
-	uint16 blank_count = 0;
-	Time p1mainTime = Time(0, 29, 10);
-	Time p2mainTime = Time(0, 30, 0);
-	// uint16 mainTime_P1 = 15;
-	// uint16 mainTime_P2 = 15;
-	// uint8 consumedVblank_P1 = blank_count,
-	// 	  consumedVblank_P2 = blank_count;
 
-	int8 playerTurn = -1;
-	bool beepPlaying = false;
-	bool timePause = true;
-	bool leftIsP1 = false;
-	uint8 turnNumber = 1;
 	// setPowerButtonCB(dsi_callback_quitToMenu);
 	do {
 		int keys_pressed, keys_released;
@@ -439,34 +463,11 @@ int main(void) {
 		if(keys_pressed & KEY_SELECT)
 			break;
 
-		
-
-		
-		printf("\x1b[2J");
-		// printf("%d\n",mainTime_P1);
-		// printf("%d\n",mainTime_P2);
-		printf("Player 1:\n");
-		printf("%02d:%02d:%02d\n", p1mainTime.hours, p1mainTime.minutes, p1mainTime.seconds);
-		printf("\nPlayer 2:\n");
-		printf("%02d:%02d:%02d\n", p2mainTime.hours, p2mainTime.minutes, p2mainTime.seconds);
-		printf("\n\nPlayerTurn: %d", playerTurn);
-		if(timePause){
-			printf("\nTime is Paused");
-			printf("\nTurn Number: %03d\n", turnNumber);
-		}
-		else
-			printf("\n\nTurn Number: %03d\n", turnNumber);
-		printf("\nP1 Consumed Vblank: %d\n", p1mainTime.vblankConsumed);
-		printf("P2 Consumed Vblank: %d\n", p2mainTime.vblankConsumed);
-		printf("%d\n", blank_count);
-		if(leftIsP1 && playerTurn != -1)
-			printf("Player 1 is D-Pad Side");
-		else if(!leftIsP1 && playerTurn != -1)
-			printf("Player 1 is ABXY Side");
+	
 		// printf("P1 Current VBlank Count: %d\n", consumedVblank_P1);
 		// printf("P2 Current VBlank Count: %d\n", consumedVblank_P2);
-		mmEffectCancel(beep);
-
+		// mmEffectCancel(beep);
+		// writeToConsole();
 		
 	} while(1);
 
