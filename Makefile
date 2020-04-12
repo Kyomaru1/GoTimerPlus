@@ -9,8 +9,8 @@ endif
 # These set the information text in the nds file
 GAME_TITLE     := Go Timer+
 GAME_SUBTITLE1 := KYOStudios
-GAME_SUBTITLE2 := 
-GAME_ICON :=
+GAME_SUBTITLE2 := Go/Baduk Timer
+GAME_ICON := gtp_icon.bmp
 
 include $(DEVKITARM)/ds_rules
 
@@ -32,7 +32,7 @@ INCLUDES := include
 DATA     := data
 GRAPHICS := graphics
 AUDIO    := audio
-ICON     := icon.bmp
+ICON     := 
 
 # specify a directory which contains the nitro filesystem
 # this is relative to the Makefile
