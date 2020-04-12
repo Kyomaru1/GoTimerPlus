@@ -297,7 +297,19 @@ int main(void) {
 	bool graphicsInited = false;
 
 	if(!graphicsInited){
-		graphicsInit();
+		// irqSet(IRQ_VBLANK, vBlankHandler);
+		// irqEnable(IRQ_VBLANK);
+		////////////////////////////////////////////////////////////
+		videoSetMode(MODE_3_3D);
+		videoSetModeSub(MODE_3_2D);
+
+		// Set up enough texture memory for our textures
+		// Bank A is just 128kb and we are using 194 kb of
+		// sprites
+		vramSetBankA(VRAM_A_MAIN_BG);
+
+		vramSetBankC(VRAM_C_SUB_BG);
+		drawGraphics();
 		graphicsInited = true;
 	}
 

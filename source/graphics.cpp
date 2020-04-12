@@ -138,13 +138,13 @@ void drawGraphics(){
 	// int bg1 = bgInit(0, BgType_Text8bpp, BgSize_T_256x256, 0, 1);
 	// int bg2 = bgInit(1, BgType_Text8bpp, BgSize_T_256x256, 1, 2);
 	// int bg3 = bgInit(2, BgType_ExRotation, BgSize_ER_256x256, 2, 3);
-	int bg4 = bgInit(3, BgType_Bmp8, BgSize_B8_256x256, 0, 0);
+	int bg4 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
 
 	//setup sub bg layers
 	// int bg5 = bgInitSub(0, BgType_Text8bpp, BgSize_ER_256x256, 0, 1);
 	// int bg6 = bgInitSub(1, BgType_Text8bpp, BgSize_ER_256x256, 1, 1);
 	// int bg7 = bgInitSub(2, BgType_Text8bpp, BgSize_ER_256x256, 2, 1);
-	// int bg8 = bgInitSub(3, BgType_Bmp8, BgSize_B8_256x256, 4, 0);
+	int bg8 = bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
 
 	//setup BG Priorities
 	//main
@@ -159,9 +159,9 @@ void drawGraphics(){
 
 	//copy appropriate tiles to appropriate layers. DMACopy
 	//topscreen bg layer 0:
-	dmaCopy(TopBackgroundBitmap, bgGetGfxPtr(bg4), TopBackgroundBitmapLen);
-	dmaCopy(TopBackgroundPal, BG_PALETTE, 256*2);
-	// dmaCopy(TopBackgroundMap, bgGetMapPtr(bg4), TopBackgroundMapLen);
+	dmaCopyHalfWords(0, TopBackgroundBitmap, bgGetGfxPtr(bg4), TopBackgroundBitmapLen);
+	dmaCopyHalfWords(0, TopBackgroundPal, BG_PALETTE, 256*2);
+	// dmaCopyHalfWords(TopBackgroundMap, bgGetMapPtr(bg4), TopBackgroundMapLen);
 
 	//setup sprites for Top Screen player info/time/turns
 	//layer 1:
@@ -172,9 +172,9 @@ void drawGraphics(){
 
 	//setup background for sub screen
 	//layer 0:
-	// dmaCopy(TopBackgroundBitmap, bgGetGfxPtr(bg8), TopBackgroundBitmapLen);
-	// dmaCopy(TopBackgroundPal, BG_PALETTE_SUB, 256*2);
-	// dmaCopy(TopBackgroundMap, bgGetMapPtr(bg8), TopBackgroundMapLen);
+	dmaCopyHalfWords(1, TopBackgroundBitmap, bgGetGfxPtr(bg8), TopBackgroundBitmapLen);
+	dmaCopyHalfWords(1, TopBackgroundPal, BG_PALETTE_SUB, 256*2);
+	// dmaCopyHalfWords(TopBackgroundMap, bgGetMapPtr(bg8), TopBackgroundMapLen);
 	//setup sprites for buttons/UI
 	//layer 1:
 	//setup sprites for text:

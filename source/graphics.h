@@ -22,6 +22,7 @@
 void initSubSprites(void);
 void graphicsInit();
 void startRendering(bool top);
+void drawGraphics();
 bool isRenderingTop();
 
 template<typename T> inline const T abs(T const & x)
