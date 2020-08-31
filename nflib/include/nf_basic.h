@@ -30,6 +30,9 @@ extern char NF_ROOTFOLDER[32];
 
 
 // Function NF_Error();
+// Generates an error and stops program execution, showing on the screen the error.
+// This command it’s internaly used by the lib to generate debug messages and rarely will
+// be used in you code.
 void NF_Error(u16 code, const char* text, u32 value);
 // Errores para debug. Detiene el sistema e informa del error
 // 101: Fichero no encontrado
@@ -54,29 +57,39 @@ void NF_Error(u16 code, const char* text, u32 value);
 
 
 // Function NF_SetRootFolder();
+/*
+Defines the root folder of your project then inits the filesystem (FAT or NitroFS).
+This makes easy change the name of folder that contains all files of your project afterit’s compiled. 
+It’s imperative the use of this function before load any file from FAT.
+If you want to use NitroFS, use “NITROFS” as root folder name. 
+You must copy the right MAKEFILE on the root of your project to enable NitroFS usage. 
+Also you has to put all files you want to load in “nitrofiles” folder.
+*/
 void NF_SetRootFolder(const char* folder);
-// Define el nombre de la carpeta que se usara como "root" si se usa la FAT
 
 
 
 // Function NF_DmaMemCopy();
+/*
+Function to fast copy blocks of memory from RAM to VRAM (because it’s the kind of copy where DMA copy it’s most effective). 
+The function checks if data it’s aligned for DMA copy, if not, uses memcpy(); command insead.
+*/
 void NF_DmaMemCopy(void* destination, const void* source, u32 size);
-// Copia un bloque de memoria usando DMA (canal 3, halfwords) y vaciando previamente
-// el cache. Con pruebas de bloques grandes (64kb o 128kb) he observado que memcpy(); 
-// sigue siendo mas rapida.
-
 
 
 // Function NF_GetLanguage();
+/*
+Returns the user language ID.
+0 : Japanese
+1 : English
+2 : French
+3 : German
+4 : Italian
+5 : Spanish
+6 : Chinese
+*/
 extern u8 NF_GetLanguage(void);
-// Devuelve el ID del idioma del usuario
-// 0 : Japanese
-// 1 : English
-// 2 : French
-// 3 : German
-// 4 : Italian
-// 5 : Spanish
-// 6 : Chinese
+
 
 
 
