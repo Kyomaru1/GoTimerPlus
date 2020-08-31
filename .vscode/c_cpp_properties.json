@@ -13,7 +13,9 @@
                 "${default}",
                 "/opt/devkitpro/libnds/include",
                 "${workspaceFolder}/build",
-                "/opt/devkitpro/devkitARM/**"
+                "${workspaceFolder}/nitrofiles/**",
+                "/opt/devkitpro/devkitARM/**",
+                "${workspaceFolder}/nflib/include"
             ]
         }
     ],

@@ -37,7 +37,9 @@
         {
             "label": "Run ROM (Desmume)",
             "type": "shell",
-            "command": "desmume ${workspaceFolder}/GoTimerPlus.nds",
+            "linux":{
+                "command": "desmume ${workspaceFolder}/GoTimerPlus.nds",
+            },
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -48,7 +50,9 @@
         {
             "label": "Copy Build to SD Card",
             "type": "shell",
-            "command": ".vscode/copy_to_sd_linux.sh",
+            "linux":{
+                "command": ".vscode/copy_to_sd_linux.sh",
+            },
             "args": [
                 "${workspaceFolder}/GoTimerPlus.nds",
                 "${input:password}"
@@ -62,6 +66,29 @@
                 "showReuseMessage": true,
                 "clear": true
             }
+        },
+        {
+            "label": "[NDS] Convert Images of Type...",
+            "type": "shell",
+            "linux":{
+                "command": ".vscode/Scripts/sh/convert_${input:imageType}.sh",
+            },
+            "windows":{
+                "command": ".vscode/Scripts/batch/convert_${input:imageType}.sh",
+            },
+            "args": [
+                "${workspaceFolder}/graphics/${input:imageType}",
+                "${workspaceFolder}/nitrofiles"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "problemMatcher": []
         }
     ],
     "inputs": [
@@ -70,6 +97,22 @@
             "description": "Root Password",
             "password": true,
             "type":"promptString"
+        },
+        {
+            "id": "imageType",
+            "description": "Image Group to Convert",
+            "type":"pickString",
+            "options": [
+                "backgrounds",
+                "fonts",
+                "affine",
+                "bitmap16",
+                "bitmap8",
+                "bitmap8_shared",
+                "cmaps",
+                "sprites_autopal",
+                "sprites"
+            ]
         }
     ]
 }
