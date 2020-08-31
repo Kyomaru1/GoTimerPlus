@@ -26,11 +26,11 @@ extern "C" {
 
 
 
-// Define los slots maximos para los fondos
-#define NF_SLOTS_TBG 64			// Datos de los fondos
-#define NF_SLOTS_EXBGPAL 128	// Paletas extendidas (maximo 16 paletas por fondo)
+//Define the maximum slots for the funds
+#define NF_SLOTS_TBG 64			// Fund data
+#define NF_SLOTS_EXBGPAL 128	// Pallets extended (maximum 16 pallets per bottom)
 
-// Define el numero maximo de bancos para tiles y mapas
+// Define the maximum number of banks for tiles and maps
 #define NF_MAX_BANKS_TILES 8
 #define NF_MAX_BANKS_MAPS 16
 

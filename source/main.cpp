@@ -106,8 +106,59 @@ int main(void) {
 	NF_CreateTiledBg(0,0,"a");
 	NF_CreateTiledBg(1,0,"b");
 
-	while(1){
+	NF_InitSpriteBuffers();
+	NF_InitSpriteSys(0);
+
+	//ABXY Indicator
+	NF_LoadSpriteGfx("sprites/topabxy", 0, 16, 16);
+	NF_LoadSpritePal("sprites/topabxy", 0);
+	NF_VramSpriteGfx(0, 0, 0, false);
+	NF_VramSpritePal(0, 0, 0);
+	
+	//Cross Indicator
+	NF_LoadSpriteGfx("sprites/topcross", 1, 16, 16);
+	NF_LoadSpritePal("sprites/topcross", 1);
+	NF_VramSpriteGfx(0, 1, 1, false);
+	NF_VramSpritePal(0, 1, 1);
+
+	//Large number test
+	NF_LoadSpriteGfx("sprites/large_numbers", 2, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 2);
+	NF_VramSpriteGfx(0, 2, 2, true);
+	NF_VramSpritePal(0, 2, 2);
+
+	s16 spritexy[3][2] = {{16, 16}, {32, 16}, {16, 32}};
+	NF_CreateSprite(0, 0, 0, 0, spritexy[0][0], spritexy[0][1]);
+	// NF_CreateSprite(0, 2, 0, 0, spritexy[2][0], spritexy[2][1]);
+	NF_CreateSprite(0, 1, 1, 1, spritexy[1][0], spritexy[1][1]);
+	//0 0 : 0  0  : 0  0
+	//6 7 8 9 10 11 12 13
+	NF_CreateSprite(0, 6,  2, 2, 16,    64);  //0
+	NF_CreateSprite(0, 7,  2, 2, 32+1,  64);  //0
+	NF_CreateSprite(0, 8,  2, 2, 48+2,  64);  //:
+	NF_CreateSprite(0, 9,  2, 2, 64+3,  64);  //0
+	NF_CreateSprite(0, 10, 2, 2, 80+4,  64);  //0
+	NF_CreateSprite(0, 11, 2, 2, 96+5,  64);  //:
+	NF_CreateSprite(0, 12, 2, 2, 112+6, 64);  //0
+	NF_CreateSprite(0, 13, 2, 2, 128+7, 64);  //0
+
+	
+	
+	while(true){
+		
+		NF_SpriteFrame(0,  6, 0);
+		NF_SpriteFrame(0,  7, 1);
+		NF_SpriteFrame(0,  8, 2);
+		NF_SpriteFrame(0,  9, 3);
+		NF_SpriteFrame(0, 10, 4);
+		NF_SpriteFrame(0, 11, 5);
+		NF_SpriteFrame(0, 12, 6);
+		NF_SpriteFrame(0, 13, 7);
+
+		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
+		oamUpdate(&oamMain);
+		
 	}
 	return 0;
 }

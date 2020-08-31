@@ -1,13 +1,13 @@
 
-//{{BLOCK(uisprite1)
+//{{BLOCK(topabxy)
 
 //======================================================================
 //
-//	uisprite1, 256x256@8, 
+//	topabxy, 16x16@8, 
 //	Transparent color : FF,00,BB
 //	+ palette 256 entries, not compressed
-//	+ 1024 tiles not compressed
-//	Total size: 512 + 65536 = 66048
+//	+ 4 tiles not compressed
+//	Total size: 512 + 256 = 768
 //
 //	Time-stamp: 2020-08-31, 14:50:12
 //	Exported by Cearn's GBA Image Transmogrifier, v0.8.16
@@ -15,15 +15,15 @@
 //
 //======================================================================
 
-#ifndef GRIT_UISPRITE1_H
-#define GRIT_UISPRITE1_H
+#ifndef GRIT_TOPABXY_H
+#define GRIT_TOPABXY_H
 
-#define uisprite1TilesLen 65536
-extern const unsigned int uisprite1Tiles[16384];
+#define topabxyTilesLen 256
+extern const unsigned int topabxyTiles[64];
 
-#define uisprite1PalLen 512
-extern const unsigned short uisprite1Pal[256];
+#define topabxyPalLen 512
+extern const unsigned short topabxyPal[256];
 
-#endif // GRIT_UISPRITE1_H
+#endif // GRIT_TOPABXY_H
 
-//}}BLOCK(uisprite1)
+//}}BLOCK(topabxy)

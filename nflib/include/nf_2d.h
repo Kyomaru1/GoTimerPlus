@@ -104,9 +104,8 @@ void NF_SpriteFrame(u8 screen, u8 id, u16 frame);
 
 
 // Function NF_EnableSpriteRotScale();
-// Enable the sprite as rotatable and scalable
-// You must specify the screen, sprite number, rotation id and if
-// the doublesize (size x2) has to be activated
+// Enable the sprite as rotatable and scalable.
+// You must specify the screen, sprite number, rotation id and if the doublesize (size x2) has to be activated
 void NF_EnableSpriteRotScale(u8 screen, u8 sprite, u8 id, bool doublesize);
 
 

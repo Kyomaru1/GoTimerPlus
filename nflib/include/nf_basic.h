@@ -21,9 +21,6 @@ extern "C" {
 #include <nds.h>
 
 
-
-
-
 // Define la variable global NF_ROOTFOLDER
 extern char NF_ROOTFOLDER[32];
 
@@ -34,25 +31,25 @@ extern char NF_ROOTFOLDER[32];
 // This command it’s internaly used by the lib to generate debug messages and rarely will
 // be used in you code.
 void NF_Error(u16 code, const char* text, u32 value);
-// Errores para debug. Detiene el sistema e informa del error
-// 101: Fichero no encontrado
-// 102: Memoria insuficiente
-// 103: No quedan Slots libres
-// 104: Fondo no encontrado
-// 105: Fondo no creado
-// 106: Fuera de rango
-// 107: Insuficientes bloques contiguos en VRAM (Tiles)
-// 108: Insuficientes bloques contiguos en VRAM (Maps)
-// 109: Id ocupada (ya esta en uso)
-// 110: Id no cargada (en RAM)
-// 111: Id no en VRAM
-// 112: Sprite no creado
-// 113:	Memoria VRAM insuficiente
-// 114: La capa de Texto no existe
-// 115:	Medidas del fondo no compatibles (no son multiplos de 256)
-// 116:	Archivo demasiado grande
-// 117: Medidas del fondo affine incorrectas
-// 118: Capa de creacion del fondo affine incorrecta
+// Errors for debug. Stops the system and reports the error
+// 101: File not found
+// 102: Out of memory
+// 103: There are no free slots
+// 104: Background not found
+// 105: Background not created
+// 106: Out of range
+// 107: Insufficient contiguous blocks in VRAM (Tiles)
+// 108: Insufficient contiguous blocks in VRAM (Maps)
+// 109: Id busy (already in use)
+// 110: Id not loaded (in RAM)
+// 111: Id not in VRAM
+// 112: Sprite not created
+// 113: Insufficient VRAM memory
+// 114: Text layer does not exist
+// 115: Unsupported background measurements (not multiples of 256)
+// 116: File too large
+// 117: Incorrect affine fund measurements
+// 118: Wrong affine background creation layer
 
 
 
