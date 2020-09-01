@@ -95,88 +95,41 @@ GoTimerPlus:
 #include <stdio.h>
 #include <nf_lib.h>
 
+// Function Definitions.
 void Initialize();
-
+void InitBackgrounds();
+void InitSprites();
 void InitTimerDisplays(int player, int screen);
+void InitIndicatorSprites();
+void SetTimerStartupState(int player, int screen);
 
+// Main
 int main(void) {
 	Initialize();
 	consoleClear();
 	setBrightness(3,0);
-	NF_LoadTiledBg("backgrounds/topback2", "a", 256, 256);
-	NF_LoadTiledBg("backgrounds/botback", "b", 256, 256);
-	NF_CreateTiledBg(0,0,"a");
-	NF_CreateTiledBg(1,0,"b");
-
-	NF_InitSpriteBuffers();
-	NF_InitSpriteSys(0);
-
-	//ABXY Indicator
-	NF_LoadSpriteGfx("sprites/topabxy", 0, 16, 16);
-	NF_LoadSpritePal("sprites/topabxy", 0);
-	NF_VramSpriteGfx(0, 0, 0, false);
-	NF_VramSpritePal(0, 0, 0);
 	
-	//Cross Indicator
-	NF_LoadSpriteGfx("sprites/topcross", 1, 16, 16);
-	NF_LoadSpritePal("sprites/topcross", 1);
-	NF_VramSpriteGfx(0, 1, 1, false);
-	NF_VramSpritePal(0, 1, 1);
-
+	InitBackgrounds();
+	InitSprites();
 	
-
-	s16 spritexy[3][2] = {{170, 32}, {170, 48}, {16, 32}};
-	NF_CreateSprite(0, 0, 0, 0, spritexy[0][0], spritexy[0][1]);
-	NF_CreateSprite(0, 1, 1, 1, spritexy[1][0], spritexy[1][1]);
-	//0 0 : 0  0  : 0  0
-	//6 7 8 9 10 11 12 13
-	
-	InitTimerDisplays(1, 0);
-	InitTimerDisplays(2, 0);
+	SetTimerStartupState(1, 0);
+	SetTimerStartupState(2, 0);
 	
 	do{
-		
-		// for(int i = 0; i  < 8; i++){
-		// 	NF_SpriteFrame(0, 6 + i, i);
-		// 	NF_MoveSprite(0, 6, 32 + (32 * i/2), 64);
-			
-		// }
-
-		NF_SpriteFrame(0, 10, 9);
-		NF_SpriteFrame(0, 11, 9);
-		NF_SpriteFrame(0, 12, 9);
-		NF_SpriteFrame(0, 13, 10);
-		NF_SpriteFrame(0, 14, 9);
-		NF_SpriteFrame(0, 15, 9);
-		NF_SpriteFrame(0, 16, 10);
-		NF_SpriteFrame(0, 17, 9);
-		NF_SpriteFrame(0, 18, 9);
-
-		NF_SpriteFrame(0, 20, 9);
-		NF_SpriteFrame(0, 21, 9);
-		NF_SpriteFrame(0, 22, 9);
-		NF_SpriteFrame(0, 23, 10);
-		NF_SpriteFrame(0, 24, 9);
-		NF_SpriteFrame(0, 25, 9);
-		NF_SpriteFrame(0, 26, 10);
-		NF_SpriteFrame(0, 27, 9);
-		NF_SpriteFrame(0, 28, 9);
 		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
 		oamUpdate(&oamMain);
-		
-		
-	}while(true);
+	} while(true);
+
 	return 0;
 }
 
+
+// Function Code
 void Initialize(){
 	consoleDemoInit();
 	NF_Set2D(0,0);
 	NF_SetRootFolder("NITROFS");
-	NF_InitTiledBgBuffers();
-	NF_InitTiledBgSys(0);
-	NF_InitTiledBgSys(1);
 }
 
 void InitTimerDisplays(int player, int screen){
@@ -213,13 +166,80 @@ void InitTimerDisplays(int player, int screen){
 		}
 		NF_CreateSprite(screen, id, id, 10, (16*(i+1)) + (1+i), 32 * player + offset);
 	}
+}
 
-	// NF_CreateSprite(screen, 10,  10, 10, 16,    64 * player);  //0
-	// NF_CreateSprite(screen, 11,  10, 10, 32+1,  64 * player);  //0
-	// NF_CreateSprite(screen, 12,  10, 10, 48+2,  64 * player);  //:
-	// NF_CreateSprite(screen, 13,  10, 10, 64+3,  64 * player);  //0
-	// NF_CreateSprite(screen, 14, 10, 10, 80+4,  64 * player);  //0
-	// NF_CreateSprite(screen, 15, 10, 10, 96+5,  64 * player);  //:
-	// NF_CreateSprite(screen, 16, 10, 10, 112+6, 64 * player);  //0
-	// NF_CreateSprite(screen, 17, 10, 10, 128+7, 64 * player);  //0
+void InitBackgrounds(){
+	NF_InitTiledBgBuffers();
+	NF_InitTiledBgSys(0);
+	NF_InitTiledBgSys(1);
+	
+	NF_LoadTiledBg("backgrounds/topback2", "a", 256, 256);
+	NF_LoadTiledBg("backgrounds/botback", "b", 256, 256);
+	NF_CreateTiledBg(0,0,"a");
+	NF_CreateTiledBg(1,0,"b");
+}
+
+void InitIndicatorSprites(){
+	//ABXY Indicator
+	NF_LoadSpriteGfx("sprites/topabxy", 0, 16, 16);
+	NF_LoadSpritePal("sprites/topabxy", 0);
+	NF_VramSpriteGfx(0, 0, 0, false);
+	NF_VramSpritePal(0, 0, 0);
+	
+	//Cross Indicator
+	NF_LoadSpriteGfx("sprites/topcross", 1, 16, 16);
+	NF_LoadSpritePal("sprites/topcross", 1);
+	NF_VramSpriteGfx(0, 1, 1, false);
+	NF_VramSpritePal(0, 1, 1);
+
+	//ABXY Indicator
+	NF_LoadSpriteGfx("sprites/topabxy", 2, 16, 16);
+	NF_LoadSpritePal("sprites/topabxy", 2);
+	NF_VramSpriteGfx(0, 2, 2, false);
+	NF_VramSpritePal(0, 2, 2);
+	
+	//Cross Indicator
+	NF_LoadSpriteGfx("sprites/topcross", 3, 16, 16);
+	NF_LoadSpritePal("sprites/topcross", 3);
+	NF_VramSpriteGfx(0, 3, 3, false);
+	NF_VramSpritePal(0, 3, 3);
+
+	s16 spritexy[4][2] = {
+		{170,  32}, 
+		{170,  48}, 
+		{170,  96}, 
+		{170, 112}
+	};
+	for(int i = 0; i < 4; i++){
+		NF_CreateSprite(0, i, i, i, spritexy[i][0], spritexy[i][1]);
+	}
+}
+
+void InitSprites(){
+	NF_InitSpriteBuffers();
+	NF_InitSpriteSys(0);
+
+	for(int i = 1; i <= 2; i++){
+		InitTimerDisplays(i, 0);
+	}
+
+	InitIndicatorSprites();
+
+}
+
+void SetTimerStartupState(int player, int screen){
+	for(int i = 0; i < 9; i++){
+		int id = 10 * player + i;
+		switch (i)
+		{
+		case 3:
+		case 6:
+			NF_SpriteFrame(screen, id, 10);
+			break;
+		
+		default:
+			NF_SpriteFrame(screen, id, 0);
+			break;
+		}
+	}
 }
