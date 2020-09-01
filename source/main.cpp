@@ -121,45 +121,96 @@ int main(void) {
 	NF_VramSpriteGfx(0, 1, 1, false);
 	NF_VramSpritePal(0, 1, 1);
 
+	//Player 1
 	//Large number test
+	//00:00:00
+	//^
 	NF_LoadSpriteGfx("sprites/large_numbers", 2, 16, 32);
 	NF_LoadSpritePal("sprites/large_numbers", 2);
 	NF_VramSpriteGfx(0, 2, 2, true);
 	NF_VramSpritePal(0, 2, 2);
+	//00:00:00
+	// ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 3, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 3);
+	NF_VramSpriteGfx(0, 3, 3, true);
+	NF_VramSpritePal(0, 3, 3);
+	//00:00:00
+	//  ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 4, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 4);
+	NF_VramSpriteGfx(0, 4, 4, true);
+	NF_VramSpritePal(0, 4, 4);
+	//00:00:00
+	//   ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 5, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 5);
+	NF_VramSpriteGfx(0, 5, 5, true);
+	NF_VramSpritePal(0, 5, 5);
+	//00:00:00
+	//    ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 6, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 6);
+	NF_VramSpriteGfx(0, 6, 6, true);
+	NF_VramSpritePal(0, 6, 6);
 
-	s16 spritexy[3][2] = {{16, 16}, {32, 16}, {16, 32}};
+	//00:00:00
+	//     ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 7, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 7);
+	NF_VramSpriteGfx(0, 7, 7, true);
+	NF_VramSpritePal(0, 7, 7);
+	//00:00:00
+	//      ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 8, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 8);
+	NF_VramSpriteGfx(0, 8, 8, true);
+	NF_VramSpritePal(0, 8, 8);
+	//00:00:00
+	//       ^
+	NF_LoadSpriteGfx("sprites/large_numbers", 9, 16, 32);
+	NF_LoadSpritePal("sprites/large_numbers", 9);
+	NF_VramSpriteGfx(0, 9, 9, true);
+	NF_VramSpritePal(0, 9, 9);
+
+	s16 spritexy[3][2] = {{152, 64}, {152, 80}, {16, 32}};
 	NF_CreateSprite(0, 0, 0, 0, spritexy[0][0], spritexy[0][1]);
-	// NF_CreateSprite(0, 2, 0, 0, spritexy[2][0], spritexy[2][1]);
 	NF_CreateSprite(0, 1, 1, 1, spritexy[1][0], spritexy[1][1]);
 	//0 0 : 0  0  : 0  0
 	//6 7 8 9 10 11 12 13
 	NF_CreateSprite(0, 6,  2, 2, 16,    64);  //0
-	NF_CreateSprite(0, 7,  2, 2, 32+1,  64);  //0
-	NF_CreateSprite(0, 8,  2, 2, 48+2,  64);  //:
-	NF_CreateSprite(0, 9,  2, 2, 64+3,  64);  //0
-	NF_CreateSprite(0, 10, 2, 2, 80+4,  64);  //0
-	NF_CreateSprite(0, 11, 2, 2, 96+5,  64);  //:
-	NF_CreateSprite(0, 12, 2, 2, 112+6, 64);  //0
-	NF_CreateSprite(0, 13, 2, 2, 128+7, 64);  //0
+	NF_CreateSprite(0, 7,  3, 3, 32+1,  64);  //0
+	NF_CreateSprite(0, 8,  4, 4, 48+2,  64);  //:
+	NF_CreateSprite(0, 9,  5, 5, 64+3,  64);  //0
+	NF_CreateSprite(0, 10, 6, 6, 80+4,  64);  //0
+	NF_CreateSprite(0, 11, 7, 7, 96+5,  64);  //:
+	NF_CreateSprite(0, 12, 8, 8, 112+6, 64);  //0
+	NF_CreateSprite(0, 13, 9, 9, 128+7, 64);  //0
 
 	
 	
-	while(true){
+	do{
 		
-		NF_SpriteFrame(0,  6, 0);
-		NF_SpriteFrame(0,  7, 1);
-		NF_SpriteFrame(0,  8, 2);
-		NF_SpriteFrame(0,  9, 3);
-		NF_SpriteFrame(0, 10, 4);
-		NF_SpriteFrame(0, 11, 5);
-		NF_SpriteFrame(0, 12, 6);
-		NF_SpriteFrame(0, 13, 7);
+		// for(int i = 0; i  < 8; i++){
+		// 	NF_SpriteFrame(0, 6 + i, i);
+		// 	NF_MoveSprite(0, 6, 32 + (32 * i/2), 64);
+			
+		// }
 
+		NF_SpriteFrame(0,  6, 9);
+		NF_SpriteFrame(0,  7, 9);
+		NF_SpriteFrame(0,  8, 10);
+		NF_SpriteFrame(0,  9, 9);
+		NF_SpriteFrame(0, 10, 9);
+		NF_SpriteFrame(0, 11, 10);
+		NF_SpriteFrame(0, 12, 9);
+		NF_SpriteFrame(0, 13, 9);
 		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
 		oamUpdate(&oamMain);
 		
-	}
+		
+	}while(true);
 	return 0;
 }
 
