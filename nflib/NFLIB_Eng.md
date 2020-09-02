@@ -127,10 +127,44 @@ contact@nightfoxandco.com
   - [NF_Load16bitsImage](#nf_load16bitsimage)
   - [NF_Draw16bitsImage](#nf_draw16bitsimage)
 - [#include “nf_media.h”](#include-nf_mediah)
+  - [NF_LoadBMP](#nf_loadbmp)
 - [#include “nf_affine.h”](#include-nf_affineh)
+  - [NF_InitAffineBgSys](#nf_initaffinebgsys)
+  - [NF_LoadAffineBg](#nf_loadaffinebg)
+  - [NF_UnloadAffineBg](#nf_unloadaffinebg)
+  - [NF_CreateAffineBg](#nf_createaffinebg)
+  - [NF_DeleteAffineBg](#nf_deleteaffinebg)
+  - [NF_AffineBgTransform](#nf_affinebgtransform)
+  - [NF_AffineBgMove](#nf_affinebgmove)
+  - [NF_AffineBgCenter](#nf_affinebgcenter)
 - [#include “nf_3d.h”](#include-nf_3dh)
+  - [NF_InitOpenGl](#nf_initopengl)
 - [#include “nf_sprite3d.h”](#include-nf_sprite3dh)
+  - [NF_Init3dSpriteSys](#nf_init3dspritesys)
+  - [NF_Vram3dSpriteGfx](#nf_vram3dspritegfx)
+  - [NF_Free3dSpriteGfx](#nf_free3dspritegfx)
+  - [NF_VramSpriteGfxDefrag](#nf_vramspritegfxdefrag-1)
+  - [NF_Vram3dSpritePal](#nf_vram3dspritepal)
+  - [NF_Create3dSprite](#nf_create3dsprite)
+  - [NF_Delete3dSprite](#nf_delete3dsprite)
+  - [NF_Sort3dSprites](#nf_sort3dsprites)
+  - [NF_Set3dSpritePriority](#nf_set3dspritepriority)
+  - [NF_Swap3dSpritePriority](#nf_swap3dspritepriority)
+  - [NF_Move3dSprite](#nf_move3dsprite)
+  - [NF_Show3dSprite](#nf_show3dsprite)
+  - [NF_Set3dSpriteFrame](#nf_set3dspriteframe)
+  - [NF_Draw3dSprites](#nf_draw3dsprites)
+  - [NF_Update3dSpriteGfx](#nf_update3dspritegfx)
+  - [NF_Rotate3dSprite](#nf_rotate3dsprite)
+  - [NF_Scale3dSprite](#nf_scale3dsprite)
+  - [NF_Blend3dSprite](#nf_blend3dsprite)
+  - [NF_3dSpritesLayer](#nf_3dspriteslayer)
+  - [NF_3dSpriteEditPalColor](#nf_3dspriteeditpalcolor)
+  - [NF_3dSpriteUpdatePalette](#nf_3dspriteupdatepalette)
+  - [NF_3dSpriteGetPalColor](#nf_3dspritegetpalcolor)
+  - [NF_3dSpriteSetDeep](#nf_3dspritesetdeep)
 - [#include “nf_mixedbg.h”](#include-nf_mixedbgh)
+  - [NF_InitMixedBgSys](#nf_initmixedbgsys)
 
 ---
 # How to install
@@ -1770,16 +1804,14 @@ Draws the image stored into Slot no1 in the backbuffer of bottom screen, in the
 coordinates x:100, y:50.
 
 # #include “nf_media.h”
+## NF_LoadBMP
+```c++
 void NF_LoadBMP(
-const char* file,
-u8 slot
+    const char* file, // File
+    u8 slot // 16 bits slot to put image
 );
-// File
-// 16 bits slot to put image
-Loads a 8, 16 o 24 bits BMP image into a 16 bits image slot. To load and show the image,
-you must init 16 bits mode, the backbuffers and use the NF_Draw16bitsImage(); to send
-the image from RAM slot to the BackBuffer. All pixels placed out of screen, are just
-ignored.
+```
+Loads a 8, 16 o 24 bits BMP image into a 16 bits image slot. To load and show the image, you must init 16 bits mode, the backbuffers and use the NF_Draw16bitsImage(); to send the image from RAM slot to the BackBuffer. All pixels placed out of screen, are just ignored.
 
 **Example:**
 
@@ -1789,15 +1821,13 @@ NF_LoadBMP(“bmp/lostend”, 0);
 Loads “lostend.bmp” file into 16 bits slot no 0.
 
 # #include “nf_affine.h”
+## NF_InitAffineBgSys
+```c++
 void NF_InitAffineBgSys(
-u8 screen
+    u8 screen // Screen (0 – 1)
 );
-// Screen (0 – 1)
-Initializes the "Affine" (rotation and scaling) background system for the selected
-screen. This mode is exclusive, you can only use affine backgrounds once this mode is
-initialized and only on layers 2 and 3. Besides these backgrounds can not be more than
-256 tiles each and must share the palette, with a maximum of 256 colors. The 2D engine
-must be initialized in mode 2.
+```
+Initializes the "Affine" (rotation and scaling) background system for the selected screen. This mode is exclusive, you can only use affine backgrounds once this mode is initialized and only on layers 2 and 3. Besides these backgrounds can not be more than 256 tiles each and must share the palette, with a maximum of 256 colors. The 2D engine must be initialized in mode 2.
 
 **Example:**
 
@@ -1805,72 +1835,66 @@ must be initialized in mode 2.
 NF_InitAffineBgSys(0);
 ```
 Initializes Affine mode for the top screen.
-void NF_LoadAffineBg( const char* file,
-const char* name,
-u16 width,
-u16 height
+
+## NF_LoadAffineBg
+```c++
+void NF_LoadAffineBg( 
+    const char* file, // File
+    const char* name, // Background name
+    u16 width, // Width in pixeles
+    u16 height // Height en pixeles
 );
-//
-//
-//
-//
-File
-Background name
-Width in pixeles
-Height en pixeles
-Load a "affine" background in RAM from the FAT or NitroFS. It is essential to initialize
-the tiled backgrounds buffers before load any "affine" background. See the section
-#include "nf_tiledbg.h" for more information about the NF_InitTiledBgBuffers();
-function.
-The "affine" backgrounds has to be 256x256 or 512x512 pixels size and a maximum tileset
-of 256 tiles. All backgrounds for the same screen must share the palette. Use the
-Convert_Affine.bat bat in the GRIT folder to convert your backgrounds.
+```
+Load a "affine" background in RAM from the FAT or NitroFS. It is essential to initialize the tiled backgrounds buffers before load any "affine" background. See the section [#include "nf_tiledbg.h"](#include-nf_tiledbgh) for more information about the NF_InitTiledBgBuffers(); function. The "affine" backgrounds has to be 256x256 or 512x512 pixels size and a maximum tileset of 256 tiles. All backgrounds for the same screen must share the palette. Use the Convert_Affine.bat bat in the GRIT folder to convert your backgrounds.
 
 **Example:**
 
 ```c++
 NF_LoadAffineBg(bg/waves512", "waves", 512, 512);
 ```
-Load the "waves512" background from bg folder, name it as "waves" and specifies that the
-background is 512 x 512 pixels.
+Load the "waves512" background from bg folder, name it as "waves" and specifies that the background is 512 x 512 pixels. 
+
+## NF_UnloadAffineBg
+
+```c++
 void NF_UnloadAffineBg(
-const char* name
+    const char* name // Background name
 );
-// Background name
-Deletes the specified affine background from RAM. It is a simple call to the
-NF_UnloadTiledBg(); function.
+```
+
+Deletes the specified affine background from RAM. It is a simple call to the [NF_UnloadTiledBg();](#nf_unloadtiledbg) function.
 
 **Example:**
-NF_UnloadAffineBg("waves") deletes the background "waves" from RAM.
+```c++
+NF_UnloadAffineBg("waves") 
+```
+deletes the background "waves" from RAM.
+
+## NF_CreateAffineBg
+```c++
 void NF_CreateAffineBg(
-u8 screen,
-u8 layer,
-const char* name,
-u8 wrap
+    u8 screen, // Screen (0 -1)
+    u8 layer, // Layer (2 – 3)
+    const char* name, // Name
+    u8 wrap // Wrap (0 – 1)
 );
-//
-//
-//
-//
-Screen (0 -1)
-Layer (2 – 3)
-Name
-Wrap (0 – 1)
-Creates an affine background in the screen and layers specified, using the preloaded
-graphics in RAM. Specify if you want the background infinite (Wrap 1) or not (Warp 0).
+```
+Creates an affine background in the screen and layers specified, using the preloaded graphics in RAM. Specify if you want the background infinite (Wrap 1) or not (Warp 0).
 
 **Example:**
 
 ```c++
 NF_CreateAffineBg (0, 3, "waves", 1);
 ```
-Create a background on screen 0, Layer 3, using the background graphics "waves", with
-the option "wrap arround” enabled.void NF_DeleteAffineBg(
-u8 screen,
-u8 layer
+Create a background on screen 0, Layer 3, using the background graphics "waves", with the option "wrap arround” enabled.
+
+## NF_DeleteAffineBg
+```c++
+void NF_DeleteAffineBg(
+    u8 screen, // Screen (0 – 1)
+    u8 layer // Layer (2 – 3)
 );
-// Screen (0 – 1)
-// Layer (2 – 3)
+```
 Deletes from VRAM the background of the screen and layer specified.
 
 **Example:**
@@ -1879,28 +1903,19 @@ Deletes from VRAM the background of the screen and layer specified.
 NF_DeleteAffineBg(0, 3);
 ```
 Delete the background of the top screen in layer 3.
+
+## NF_AffineBgTransform
+```c++
 void NF_AffineBgTransform(
-u8 screen,
-u8 layer,
-s32 x_scale,
-s32 y_scale,
-s32 x_tilt,
-s32 y_tilt
+    u8 screen, // Screen (0 – 1)
+    u8 layer, // Layer (2 – 3)
+    s32 x_scale, // Scale X (0 – 256 - >512)
+    s32 y_scale, // Scale Y (0 – 256 - >512)
+    s32 x_tilt, // Tilt X (0 – >512)
+    s32 y_tilt // Tilt Y (0 – >512)
 );
-//
-//
-//
-//
-//
-//
-Screen (0 – 1)
-Layer (2 – 3)
-Scale X (0 – 256 - >512)
-Scale Y (0 – 256 - >512)
-Tilt X (0 – >512)
-Tilt Y (0 – >512)
-Modify the transformation matrix of the specified background with given parameters. You
-can change the scale on the axes X and Y, as well as the inclination of these axes.
+```
+Modify the transformation matrix of the specified background with given parameters. You can change the scale on the axes X and Y, as well as the inclination of these axes.
 
 **Example:**
 
@@ -1908,47 +1923,35 @@ can change the scale on the axes X and Y, as well as the inclination of these ax
 NF_AffineBgTransform(0, 3, 512, 512, 0, 0);
 ```
 Zoom the bottom screen background on Layer 3, to the 50% of its size.
-void NF_AffineBgMove( u8 screen,
-u8 layer,
-s32 x,
-s32 y,
-s32 angle
+
+## NF_AffineBgMove
+```c++
+void NF_AffineBgMove( 
+    u8 screen, // Screen (0 – 1)
+    u8 layer, // Layer (2 – 3)
+    s32 x, // Position X
+    s32 y, // Position Y
+    s32 angle // Rotacion angle (-2048 / 2048)
 );
-//
-//
-//
-//
-//
-Screen (0 – 1)
-Layer (2 – 3)
-Position X
-Position Y
-Rotacion angle (-2048 / 2048)
-Moves the Affine background to the position specified. You can also specify the rotation
-of this background (between -2048 to 2048). Affine backgrounds can’t be moved with
-NF_ScrollBg(); function.
+```
+Moves the Affine background to the position specified. You can also specify the rotation of this background (between -2048 to 2048). Affine backgrounds can’t be moved with [NF_ScrollBg();](#nf_scrollbg) function.
 
 **Example:**
 
 ```c++
 NF_AffineBgMove(0, 3, 128, 96, 256);
 ```
-Move the background of the top screen in the layer 3 at coordinates x128, Y96 and rotate
-45 degrees to the right.
+Move the background of the top screen in the layer 3 at coordinates x128, Y96 and rotate 45 degrees to the right.
+
+## NF_AffineBgCenter
+```c++
 void NF_AffineBgCenter(
-u8 screen,
-u8 layer,
-s32 x,
-s32 y
+    u8 screen, // Screen (0 – 1)
+    u8 layer, // Layer (2 – 3)
+    s32 x, // Position X
+    s32 y // Position Y
 );
-//
-//
-//
-//
-Screen (0 – 1)
-Layer (2 – 3)
-Position X
-Position Y
+```
 Define the center of rotation of the affine background specified.
 
 **Example:**
@@ -1956,15 +1959,15 @@ Define the center of rotation of the affine background specified.
 ```c++
 NF_AffineBgCenter(0, 3, 128, 128);
 ```
-Define the center of rotation of the top screen, layer 3 affine background at
-coordinates x128, and 128.
+Define the center of rotation of the top screen, layer 3 affine background at coordinates x128, and 128.
 
 # #include “nf_3d.h”
-void NF_Set3D( u8 screen,
-u8 mode
+```c++
+void NF_Set3D( 
+    u8 screen, // Screen (0 – 1)
+    u8 mode // Mode (0, 2, 5)
 );
-// Screen (0 – 1)
-// Mode (0, 2, 5)
+```
 Init 3D mode for the selected screen.
 
 **Mode**
@@ -1977,9 +1980,7 @@ Init 3D mode for the selected screen.
 * Affine Bg’s of 8 bits in layers 2 & 3
 * Bitmap Bg’s at 8 or 16 bits.
 
-3D objets are rendered in layer 0. If you set screen 1 for 3D, screen numbers for 2D
-gets inverted, soo top screen it’s 1 and bottom screen 0.
-You must use this function before use 3dSprites.
+3D objets are rendered in layer 0. If you set screen 1 for 3D, screen numbers for 2D gets inverted, soo top screen it’s 1 and bottom screen 0. You must use this function before use 3dSprites.
 
 **Example:**
 
@@ -1987,24 +1988,25 @@ You must use this function before use 3dSprites.
 NF_Set3D(1, 0);
 ```
 Init 3D mode for Tiled Bg’s and Sprites on screen 1 (bottom)
+
+## NF_InitOpenGl
+```c++
 void NF_InitOpenGL(void);
-Initialitzes and configures OpenGL for 3dSprites functions of the lib.
-NF_Init3dSpriteSys(); automaticaly calls it. Soo you never use this.
+```
+Initialitzes and configures OpenGL for 3dSprites functions of the lib. NF_Init3dSpriteSys(); automaticaly calls it. Soo you never use this.
 
 # #include “nf_sprite3d.h”
-These functions are special, since it uses the 3D engine to create sprites with textured
-polygons. Can only be used on a screen at the same time, we lose the background layer 0,
-but in return we can create up to 256 sprites of a maximum size of 1024x1024, can use
-any size in base 2, and use a maximum of 32 palettes simultaneously.
-For the loading of graphics and palettes, use the same functions as 2D sprites.
-You can convert indexed images of 256 colors to create textures for the 3dSprites with
-the following grit command:
+These functions are special, since it uses the 3D engine to create sprites with textured polygons. Can only be used on a screen at the same time, we lose the background layer 0, but in return we can create up to 256 sprites of a maximum size of 1024x1024, can use any size in base 2, and use a maximum of 32 palettes simultaneously. For the loading of graphics and palettes, use the same functions as 2D sprites. You can convert indexed images of 256 colors to create textures for the 3dSprites with the following grit command:
+```sh
 grit.exe imagen.bmp -gb -gu8 -gB8 -pu8 -ftb -fh! -gTFF00FF
+```
 Or use the convert bats of 8bits images
+
+## NF_Init3dSpriteSys
+```c++
 void NF_Init3dSpriteSys();
-Init 3dSprite system.
-Asign 128kb of VRAM for textures and 16 kb for palettes.
-Enable extended palettes.
+```
+Init 3dSprite system. Asign 128kb of VRAM for textures and 16 kb for palettes. Enable extended palettes.
 
 **Example:**
 
@@ -2012,59 +2014,59 @@ Enable extended palettes.
 NF_Init3dSpriteSys();
 ```
 Init the 3dSprites engine.
-void NF_Vram3dSpriteGfx(u16 ram,
-u16 vram,
-bool keepframes
+
+## NF_Vram3dSpriteGfx
+```c++
+void NF_Vram3dSpriteGfx(
+    u16 ram, // Gfx RAM slot (0 – 255)
+    u16 vram, // Gfx VRAM slot (0 – 255)
+    bool keepframes // Copy only the first frame?
 );
-// Gfx RAM slot (0 – 255)
-// Gfx VRAM slot (0 – 255)
-// Copy only the first frame?
-Copy a Gfx from RAM to VRAM, to can use it later on 3dSprite. You must indicate the
-origin slot on RAM (0 – 255), the destination slot on VRAM (0 – 255), and if it’s
-animated one, if you want to copy all frames to VRAM (false) or just the first one
-(true).
+```
+Copy a Gfx from RAM to VRAM, to can use it later on 3dSprite. You must indicate the origin slot on RAM (0 – 255), the destination slot on VRAM (0 – 255), and if it’s animated one, if you want to copy all frames to VRAM (false) or just the first one (true).
 
 **Example:**
 
 ```c++
 NF_Vram3dSpriteGfx(160, 23, false);
 ```
-Copy the Gfx stored on the slot no160 of RAM to the slot no23 of VRAM, copying all
-frames if it’s animated.
-void NF_Free3dSpriteGfx(u16 id
+Copy the Gfx stored on the slot no160 of RAM to the slot no23 of VRAM, copying all frames if it’s animated.
+
+## NF_Free3dSpriteGfx
+```c++
+void NF_Free3dSpriteGfx(
+    u16 id // VRAM slot (0 – 255)
 );
-// VRAM slot (0 – 255)
-Delete from VRAM the Gfx of selected slot.
-You must don’t delete the Gfx if a sprite it’s using it, may cause sprite appears
-corrupted of turns invisible.
+```
+Delete from VRAM the Gfx of selected slot. You must don’t delete the Gfx if a sprite it’s using it, may cause sprite appears corrupted of turns invisible.
 
 **Example:**
 
 ```c++
 NF_Free3dSpriteGfx(34);
 ```
-Delete from VRAM the gfx on slot no34.void NF_VramSpriteGfxDefrag();
-Defrags the free VRAM used for sprites gfx. This function is automaticaly executed when
-fragmented free VRAM it’s bigger in 50% of total free VRAM. You don’t need to execute
-this command manualy never. You can get the state of VRAM reading those variables:
-NF_TEXVRAM.free
-NF_TEXVRAM.fragmented
-NF_TEXVRAM.inarow
-NF_TEXVRAM.lost <-
-<-
-<-
-<-
-Total VRAM free
-Fragmented free VRAM
-Largest free block of VRAM at the end
-unusable free VRAM because fragmentation.
-void NF_Vram3dSpritePal( u8 id,
-u8 slot
+Delete from VRAM the gfx on slot no34.
+
+## NF_VramSpriteGfxDefrag
+```c++
+void NF_VramSpriteGfxDefrag();
+```
+Defrags the free VRAM used for sprites gfx. This function is automaticaly executed when fragmented free VRAM it’s bigger in 50% of total free VRAM. You don’t need to execute this command manualy never. You can get the state of VRAM reading those variables:
+```
+NF_TEXVRAM.free <- Total VRAM free
+NF_TEXVRAM.fragmented <- Fragmented free VRAM
+NF_TEXVRAM.inarow <- Largest free block of VRAM at the end
+NF_TEXVRAM.lost  <- unusable free VRAM because fragmentation.
+```
+
+## NF_Vram3dSpritePal
+```c++
+void NF_Vram3dSpritePal( 
+    u8 id, // RAM slot of palette (0 – 64)
+    u8 slot // VRAM slot of palette (0 – 31)
 );
-// RAM slot of palette (0 – 64)
-// VRAM slot of palette (0 – 31)
-Copy the palette from RAM to the SLOT of extended palettes on VRAM. If slot it’a already
-in use, the contents it’s overwrited.
+```
+Copy the palette from RAM to the SLOT of extended palettes on VRAM. If slot it’a already in use, the contents it’s overwrited.
 
 **Example:**
 
@@ -2072,36 +2074,31 @@ in use, the contents it’s overwrited.
 NF_VramSpritePal(56, 8);
 ```
 Copy the palette from RAM slot no56 to the extended palettes slot no8.
+
+## NF_Create3dSprite
+```c++
 void NF_Create3dSprite(
-u8 id,
-u16 gfx,
-u8 pal,
-s16 x,
-s16 y
+    u8 id, // Sprite Id (0 – 255)
+    u16 gfx, // Gfx slot (0 – 255)
+    u8 pal, // Palette slot (0 – 31)
+    s16 x, // X coordinate
+    s16 y // Y coordinate
 );
-//
-//
-//
-//
-//
-Sprite Id (0 – 255)
-Gfx slot (0 – 255)
-Palette slot (0 – 31)
-X coordinate
-Y coordinate
-Create a sprite with the Id (0 - 255) given on the screen, using the Gfx and palette of
-selected slots. You must select also the coordinates where the sprite is created.
+```
+Create a sprite with the Id (0 - 255) given on the screen, using the Gfx and palette of selected slots. You must select also the coordinates where the sprite is created.
 
 **Example:**
 
 ```c++
 NF_Create3dSprite(12, 30, 1, 100, 50);
 ```
-Create a sprite on screen , with the id no12, using the gfx stored on the slot no30 of
-VRAM and the palette from slot no1. The sprite is created on the coordinates x:100, y:50
+Create a sprite on screen , with the id no12, using the gfx stored on the slot no30 of VRAM and the palette from slot no1. The sprite is created on the coordinates x:100, y:50 
+
+## NF_Delete3dSprite
+```c++
 void NF_Delete3dSprite(u8 id);
-Delete from screen the sprite of Id selected. The Gfx and palette used by the sprited
-will not be deleted from VRAM.
+```
+Delete from screen the sprite of Id selected. The Gfx and palette used by the sprited will not be deleted from VRAM.
 
 **Example:**
 
@@ -2109,27 +2106,39 @@ will not be deleted from VRAM.
 NF_Delete3dSprite(12);
 ```
 Delete from screen the sprite with id no12.
+
+## NF_Sort3dSprites
+```c++
 void NF_Sort3dSprites(void);
-Sorts the draw order of created 3dSprites by his ID. The lowest ID has priority.void NF_Set3dSpritePriority( u16 id,
-u16 prio
+```
+Sorts the draw order of created 3dSprites by his ID. The lowest ID has priority.
+
+## NF_Set3dSpritePriority
+```c++
+void NF_Set3dSpritePriority( 
+    u16 id, // Sprite ID (0 – 255)
+    u16 prio // Priority (0 – 255)
 );
-// Sprite ID (0 – 255)
-// Priority (0 – 255)
-Changes the draw priority of the 3dSprite with selected ID. The lowest ID number mean
-the highest priority.
-void NF_Swap3dSpritePriority( u16 id_a,
-u16 id_b
+```
+Changes the draw priority of the 3dSprite with selected ID. The lowest ID number mean the highest priority.
+
+## NF_Swap3dSpritePriority
+```c++
+void NF_Swap3dSpritePriority( 
+    u16 id_a, // Sprite ID A
+    u16 id_b // Sprite ID B
 );
-// Sprite ID A
-// Sprite ID B
+```
 Swaps the priority between two 3dSprites.
-void NF_Move3dSprite( u8 id,
-s16 x,
-s16 y
+
+## NF_Move3dSprite
+```c++
+void NF_Move3dSprite( 
+    u8 id, // Id. of Sprite (0 – 255)
+    s16 x, // Position X
+    s16 y // Position Y
 );
-// Id. of Sprite (0 – 255)
-// Position X
-// Position Y
+```
 Move a 3dSprite to the position specified.
 
 **Example:**
@@ -2138,13 +2147,15 @@ Move a 3dSprite to the position specified.
 NF_Move3dSprite(35, 100, 50);
 ```
 Moves the 3dSprite no35 to the coordinates x:100, y:50
-void NF_Show3dSprite( u8 id,
-bool show
+
+## NF_Show3dSprite
+```c++
+void NF_Show3dSprite( 
+    u8 id, // Id. of Sprite (0 – 255)
+    bool show // Visivility
 );
-// Id. of Sprite (0 – 255)
-// Visivility
-Show or hides a 3dSprite. If you hide it, 3dSprite just becomes invisible, without
-delete it.
+```
+Show or hides a 3dSprite. If you hide it, 3dSprite just becomes invisible, without delete it.
 
 **Example:**
 
@@ -2152,102 +2163,97 @@ delete it.
 NF_Show3dSprite(35, false);
 ```
 Hides the 3dSprite no35.
+```c++
 NF_Show3dSprite(45, true);
+```
 Makes visible the 3dSprite no45.
+
+## NF_Set3dSpriteFrame
+```c++
 void NF_Set3dSpriteFrame(
-u8 id,
-u8 frame
+    u8 id, // Id. of Sprite (0 – 255)
+    u8 frame // Frame
 );
-// Id. of Sprite (0 – 255)
-// Frame
+```
 Selects what frame of an animation has to show the 3dSprite.
-Example
+
+**Example**
+```c++
 NF_Set3dSpriteFrame(20, 5);
-Sprite no20 shows the frame no5.void NF_Draw3dSprites(void);
-Draws on the screen all created 3dSprites.
-You need to do this one time per frame to display created 3dSprites.
-This is the basic code to show them:
+```
+Sprite no20 shows the frame no5.
+
+## NF_Draw3dSprites
+```c++
+void NF_Draw3dSprites(void);
+```
+Draws on the screen all created 3dSprites. You need to do this one time per frame to display created 3dSprites. This is the basic code to show them:
+```c++
 // Draw all 3D Sprites
 NF_Draw3dSprites();
 // Update 3D scenario, if not, nothing on the screen
 glFlush(0);
 // Wait for vertical sync
 swiWaitForVBlank();
+```
+
+## NF_Update3dSpriteGfx
+```c++
 void NF_Update3dSpritesGfx(void);
-Update if needed the textures for animated 3dSprites.
-Use this if any of your 3dSprites has the flag KEEPFRAMES == TRUE.
-Put this function just after swiWaitForVBlank();
+```
+Update if needed the textures for animated 3dSprites. Use this if any of your 3dSprites has the flag `KEEPFRAMES == TRUE`.
+Put this function just after `swiWaitForVBlank()`;
+
+## NF_Rotate3dSprite
+```c++
 void NF_Rotate3dSprite(
-u16
-s16
-s16
-s16
+    u16 id, // Sprite ID (0 – 255)
+    s16 x, // Rotacion X (-512/0/512)
+    s16 y, // Rotacion Y (-512/0/512)
+    s16 z // Rotacion Z (-512/0/512)
 );
-id,
-x,
-y,
-z
-//
-//
-//
-//
-Sprite ID (0 – 255)
-Rotacion X (-512/0/512)
-Rotacion Y (-512/0/512)
-Rotacion Z (-512/0/512)
-Rotates the 3dSprite over the 3 axis. You can set a rotation between -512 y 512,
-becoming 0 the central point (no rotation).
-void NF_Scale3dSprite( u16 id,
-u16 x,
-u16 y
+```
+Rotates the 3dSprite over the 3 axis. You can set a rotation between -512 y 512, becoming 0 the central point (no rotation).
+
+## NF_Scale3dSprite
+```c++
+void NF_Scale3dSprite( 
+    u16 id, // Sprite ID
+    u16 x, // X scale (0/64/512)
+    u16 y // Y scale (0/64/512)
 );
-// Sprite ID
-// X scale (0/64/512)
-// Y scale (0/64/512)
-Scales 3dSprite over X & Y axis. Scaling range goes from 0 to 512, 64 equals to 100%
-scale.
-void NF_Blend3dSprite( u8 sprite,
-u8 poly_id,
-u8 alpha
+```
+Scales 3dSprite over X & Y axis. Scaling range goes from 0 to 512, 64 equals to 100% scale.
+
+## NF_Blend3dSprite
+```c++
+void NF_Blend3dSprite( 
+    u8 sprite, // Sprite ID (0 – 255)
+    u8 poly_id, // Polygon ID (1 – 62)
+    u8 alpha // Transparency (0 – 31)
 );
-// Sprite ID (0 – 255)
-// Polygon ID (1 – 62)
-// Transparency (0 – 31)
-Enable and change the level of alpha of the 3D sprite indicated. For transparency to be
-effective among Sprites, you must specify a different poly_id for each sprite (between 1
-and 62). The alpha range is from 0 to 31, 31 means opaque. To remove the transparency,
-select a value 31 for alpha or set poly_id to 0.
+```
+Enable and change the level of alpha of the 3D sprite indicated. For transparency to be effective among Sprites, you must specify a different poly_id for each sprite (between 1 and 62). The alpha range is from 0 to 31, 31 means opaque. To remove the transparency, select a value 31 for alpha or set poly_id to 0.
+
+## NF_3dSpritesLayer
+```c++
 void NF_3dSpritesLayer(
-u8 layer
+    u8 layer // Layer
 );
-// Layer
-Select the layer to draw the 3D Sprites. (0 - 3)
-3dSprites actually always drawn on Layer 0, this function only changes the priority of
-this layer on the other.void NF_3dSpriteEditPalColor( u8
-u8
-u8
-u8
-u8
+```
+Select the layer to draw the 3D Sprites. (0 - 3) 3dSprites actually always drawn on Layer 0, this function only changes the priority of this layer on the other.
+
+## NF_3dSpriteEditPalColor
+```c++
+void NF_3dSpriteEditPalColor( 
+    u8 pal, // Palette (0 – 31)
+    u8 number, // Color number (0 – 255)
+    u8 r, // Value for R (0 – 31)
+    u8 g, // Value for G (0 – 31)
+    u8 b // Value for B (0 – 31)
 );
-pal,
-number,
-r,
-g,
-b
-//
-//
-//
-//
-//
-Palette (0 – 31)
-Color number (0 – 255)
-Value for R (0 – 31)
-Value for G (0 – 31)
-Value for B (0 – 31)
-Changes the value of one color on one the sprites palete of screen specified. The change
-is made over the RAM copy of the palette, soo you dont see any change until you update
-it on VRAM with NF_3dSpriteUpdatePalette(); function. Use this function to make cool
-effect on your Sprites.
+```
+Changes the value of one color on one the sprites palete of screen specified. The change is made over the RAM copy of the palette, soo you dont see any change until you update it on VRAM with [NF_3dSpriteUpdatePalette();](#nf_3dspriteupdatepalette) function. Use this function to make cool effect on your Sprites.
 
 **Example:**
 
@@ -2255,10 +2261,13 @@ effect on your Sprites.
 NF_3dSpriteSetPalColor(3, 1, 31, 0, 0);
 ```
 Change the value of color no1 of the palette no3 to red.
+
+## NF_3dSpriteUpdatePalette
+```c++
 void NF_3dSpriteUpdatePalette(
-u8 pal
+    u8 pal // Palette (0 – 31)
 );
-// Palette (0 – 31)
+```
 Updates on VRAM the sprites palette specified with the RAM copy of it.
 
 **Example:**
@@ -2267,51 +2276,46 @@ Updates on VRAM the sprites palette specified with the RAM copy of it.
 NF_3dSpriteUpdatePalette(2);
 ```
 Updates the palette no2.
-void NF_3dSpriteGetPalColor( u8 pal,
-u8 number,
-u8* r,
-u8* g,
-u8* b
+
+## NF_3dSpriteGetPalColor
+```c++
+void NF_3dSpriteGetPalColor( 
+    u8 pal, // Pal (0 – 31)
+    u8 number, // Color number (0 – 255)
+    u8* r, // R value (0 – 31)
+    u8* g, // G value (0 – 31)
+    u8* b // B value (0 – 31)
 );
-//
-//
-//
-//
-//
-Pal (0 – 31)
-Color number
-R value (0 –
-G value (0 –
-B value (0 –
-(0 – 255)
-31)
-31)
-31)
-Gets the RGB value of one color from sprites palette loaded on RAM from screen
-specified.
+```
+Gets the RGB value of one color from sprites palette loaded on RAM from screen specified.
 
 **Example:**
+```c++
 u8 red;
 u8 green;
 u8 blue;
 NF_3dSpriteGetPalColor(3, 200, &red, &green, &blue);
-Gets the RGB value of color number 200 from sprites palette number 3 and store it into
-“red”, “green” and “blue” variables
+```
+Gets the RGB value of color number 200 from sprites palette number 3 and store it into “red”, “green” and “blue” variables
+
+## NF_3dSpriteSetDeep
+```c++
 void NF_3dSpriteSetDeep(
-u8 id,
-s16 z
+    u8 id, // Sprite ID (0 – 255)
+    s16 z // Deep (-512/0/512)
 );
-// Sprite ID (0 – 255)
-// Deep (-512/0/512)
-Sets the depth in the Z axis for selected 3dSprite, -512 being the closest point, 0 is
-the default and 512 the furthest point. Change the Sprite’s depth is to prevent the
-intersection with other sprites when rotation or zoom it’s applied. Change the depth of
-Sprite also alters the priority it has on screen.
+```
+Sets the depth in the Z axis for selected 3dSprite, -512 being the closest point, 0 is the default and 512 the furthest point. Change the Sprite’s depth is to prevent the intersection with other sprites when rotation or zoom it’s applied. Change the depth of Sprite also alters the priority it has on screen.
 
 # #include “nf_mixedbg.h”
-void NF_InitMixedBgSys(u8 screen);
-// Screen (0 – 1)
-Init mixed background mode (Tiled BG + Bitmap 8 bits)
-Layer 0 a 2 – Tiled (64kb, 48kb for tiles, 16kb for mapas).
-Layer 3 - Bitmap 8 bits (64kb).
+## NF_InitMixedBgSys
+```c++
+void NF_InitMixedBgSys(
+    u8 screen // Screen (0 – 1)
+);
+```
+Init mixed background mode (Tiled BG + Bitmap 8 bits) 
+* Layer 0 a 2 – Tiled (64kb, 48kb for tiles, 16kb for mapas). 
+* Layer 3 - Bitmap 8 bits (64kb).
+
 You can use all functions of both background modes.
