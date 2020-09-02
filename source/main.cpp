@@ -94,6 +94,7 @@ GoTimerPlus:
 #include <nds.h>
 #include <stdio.h>
 #include <nf_lib.h>
+#include "TimerSystem.h"
 
 // Function Definitions.
 void Initialize();
@@ -102,6 +103,8 @@ void InitSprites();
 void InitTimerDisplays(int player, int screen);
 void InitIndicatorSprites();
 void SetTimerStartupState(int player, int screen);
+
+void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brokenSecondsValues, int player, int screen);
 
 // Main
 int main(void) {
@@ -114,11 +117,38 @@ int main(void) {
 	
 	SetTimerStartupState(1, 0);
 	SetTimerStartupState(2, 0);
+
+	Time p1mainTime = Time(256, 59, 59);
+	Time p2mainTime = Time(152, 30, 0);
+
+	static int *p1BrokenTime[3] = {
+		{p1mainTime.getBrokenHours()},
+		{p1mainTime.getBrokenMinutes()},
+		{p1mainTime.getBrokenSeconds()}
+	};
+
+	
+	UpdateTimerDigits(p1BrokenTime[0], p1BrokenTime[1], p1BrokenTime[2], 1, 0);
+
+	static int *p2BrokenTime[3] = {
+		{p2mainTime.getBrokenHours()},
+		{p2mainTime.getBrokenMinutes()},
+		{p2mainTime.getBrokenSeconds()}
+	};
+
+	UpdateTimerDigits(p2BrokenTime[0], p2BrokenTime[1], p2BrokenTime[2], 2, 0);
 	
 	do{
+		// int keys_pressed, keys_released;
+		// scanKeys();
+		// keys_pressed = keysDown();
+		// keys_released = keysUp();
+		
 		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
 		oamUpdate(&oamMain);
+
+
 	} while(true);
 
 	return 0;
@@ -164,8 +194,56 @@ void InitTimerDisplays(int player, int screen){
 		if(player == 2){
 			offset = 32;
 		}
-		NF_CreateSprite(screen, id, id, 10, (16*(i+1)) + (1+i), 32 * player + offset);
+		NF_CreateSprite(screen, id, id, 10, (16*(i+1)) + (1+i), 48 * player + offset);
 	}
+}
+
+void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brokenSecondsValues, int player, int screen){
+	char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+	for(int i = 0; i < 9; i++){
+		int id = (10 * player) + i;
+		switch(i){
+			case 0:
+				NF_SpriteFrame(0, id, brokenHourValues[0]);
+				break;
+			case 1:
+				NF_SpriteFrame(0, id, brokenHourValues[1]);
+				break;
+			case 2:
+				NF_SpriteFrame(0, id, brokenHourValues[2]);
+				break;
+			case 4:
+				NF_SpriteFrame(0, id, brokenMinuteValues[0]);
+				break;
+			case 5:
+				NF_SpriteFrame(0, id, brokenMinuteValues[1]);
+				break;
+			case 7:
+				NF_SpriteFrame(0, id, brokenSecondsValues[0]);
+				break;
+			case 8:
+				NF_SpriteFrame(0, id, brokenSecondsValues[1]);
+				break;
+			case 3:// : DO NOTHING
+			case 6:// : DO NOTHING
+				break;
+			
+		}
+	}
+
+	char message[9] = {
+		digits[brokenHourValues[0]],
+		digits[brokenHourValues[1]],
+		digits[brokenHourValues[2]],
+		':',
+		digits[brokenMinuteValues[0]],
+		digits[brokenMinuteValues[1]],
+		':',
+		digits[brokenSecondsValues[0]],
+		digits[brokenSecondsValues[1]],
+	};
+	nocashMessage(message);
 }
 
 void InitBackgrounds(){
@@ -181,34 +259,34 @@ void InitBackgrounds(){
 
 void InitIndicatorSprites(){
 	//ABXY Indicator
-	NF_LoadSpriteGfx("sprites/topabxy", 0, 16, 16);
-	NF_LoadSpritePal("sprites/topabxy", 0);
+	NF_LoadSpriteGfx("sprites/topcross", 0, 16, 16);
+	NF_LoadSpritePal("sprites/topcross", 0);
 	NF_VramSpriteGfx(0, 0, 0, false);
 	NF_VramSpritePal(0, 0, 0);
 	
 	//Cross Indicator
-	NF_LoadSpriteGfx("sprites/topcross", 1, 16, 16);
-	NF_LoadSpritePal("sprites/topcross", 1);
+	NF_LoadSpriteGfx("sprites/topabxy", 1, 16, 16);
+	NF_LoadSpritePal("sprites/topabxy", 1);
 	NF_VramSpriteGfx(0, 1, 1, false);
 	NF_VramSpritePal(0, 1, 1);
 
 	//ABXY Indicator
-	NF_LoadSpriteGfx("sprites/topabxy", 2, 16, 16);
-	NF_LoadSpritePal("sprites/topabxy", 2);
+	NF_LoadSpriteGfx("sprites/topcross", 2, 16, 16);
+	NF_LoadSpritePal("sprites/topcross", 2);
 	NF_VramSpriteGfx(0, 2, 2, false);
 	NF_VramSpritePal(0, 2, 2);
 	
 	//Cross Indicator
-	NF_LoadSpriteGfx("sprites/topcross", 3, 16, 16);
-	NF_LoadSpritePal("sprites/topcross", 3);
+	NF_LoadSpriteGfx("sprites/topabxy", 3, 16, 16);
+	NF_LoadSpritePal("sprites/topabxy", 3);
 	NF_VramSpriteGfx(0, 3, 3, false);
 	NF_VramSpritePal(0, 3, 3);
 
 	s16 spritexy[4][2] = {
-		{170,  32}, 
-		{170,  48}, 
-		{170,  96}, 
-		{170, 112}
+		{138,  32}, 
+		{154,  32}, 
+		{138,  112}, 
+		{154,  112}
 	};
 	for(int i = 0; i < 4; i++){
 		NF_CreateSprite(0, i, i, i, spritexy[i][0], spritexy[i][1]);
