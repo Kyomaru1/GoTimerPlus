@@ -4,7 +4,9 @@
 #   $1  := Directory where files are located; generally graphics/fonts
 #   $2  := Output directory; for Nitrofs, this is normally the nitrofiles folder
 
-clear
+if [ $3 == true ]; then
+    clear
+fi
 
 #test input to check if file instead of directory
 if [ ! -d $1 ]; then

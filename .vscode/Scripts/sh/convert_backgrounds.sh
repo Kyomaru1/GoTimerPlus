@@ -3,7 +3,9 @@
 #   $1  := Directory where files are located; generally graphics
 #   $2  := Output directory; for Nitrofs, this is normally the nitrofiles folder
 
-clear
+if [ $3 == true ]; then
+    clear
+fi
 
 if [ ! -d $1 ]; then
     echo "Input directory is not a directory, but a file. Please enter a valid directory for input"

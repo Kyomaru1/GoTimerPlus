@@ -18,7 +18,21 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": true
-            }
+            },
+            "dependsOn": [
+                "Clean Project",
+                "Generate Assets"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Generate Assets",
+            "type" : "shell",
+            "command": "./.vscode/Scripts/sh/convert_all.sh",
+            "args": [
+                "${workspaceFolder}/graphics",
+                "${workspaceFolder}/nitrofiles"
+            ]
         },
         {
             "label": "Clean Project",
@@ -44,7 +58,9 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "dependsOn": "Make Project",
+            "dependsOn": [
+                "Make Project"
+            ],
             "dependsOrder": "sequence"
         },
         {
@@ -78,7 +94,8 @@
             },
             "args": [
                 "${workspaceFolder}/graphics/${input:imageType}",
-                "${workspaceFolder}/nitrofiles"
+                "${workspaceFolder}/nitrofiles",
+                "true"
             ],
             "presentation": {
                 "echo": false,
