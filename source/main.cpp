@@ -95,15 +95,20 @@ GoTimerPlus:
 #include <stdio.h>
 #include <nf_lib.h>
 #include "TimerSystem.h"
+#include "math.h"
+
+
+char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 // Function Definitions.
 void Initialize();
 void InitBackgrounds();
 void InitSprites();
 void InitTimerDisplays(int player, int screen);
+void InitUnderlines(int player, int screen);
 void InitIndicatorSprites();
 void SetTimerStartupState(int player, int screen);
-
+void SetUnderlines(int player, int screen, int state);
 void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brokenSecondsValues, int player, int screen);
 
 // Main
@@ -118,8 +123,8 @@ int main(void) {
 	SetTimerStartupState(1, 0);
 	SetTimerStartupState(2, 0);
 
-	Time p1mainTime = Time(256, 59, 59);
-	Time p2mainTime = Time(152, 30, 0);
+	Time p1mainTime = Time(0, 0, 0);
+	Time p2mainTime = Time(0, 0, 0);
 
 	static int *p1BrokenTime[3] = {
 		{p1mainTime.getBrokenHours()},
@@ -138,11 +143,13 @@ int main(void) {
 
 	UpdateTimerDigits(p2BrokenTime[0], p2BrokenTime[1], p2BrokenTime[2], 2, 0);
 	
+	// SetUnderlines(2, 0, 1);
+
 	do{
-		// int keys_pressed, keys_released;
-		// scanKeys();
-		// keys_pressed = keysDown();
-		// keys_released = keysUp();
+		int keys_pressed, keys_released;
+		scanKeys();
+		keys_pressed = keysDown();
+		keys_released = keysUp();
 		
 		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
@@ -199,7 +206,6 @@ void InitTimerDisplays(int player, int screen){
 }
 
 void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brokenSecondsValues, int player, int screen){
-	char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 	for(int i = 0; i < 9; i++){
 		int id = (10 * player) + i;
@@ -231,19 +237,6 @@ void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brok
 			
 		}
 	}
-
-	char message[9] = {
-		digits[brokenHourValues[0]],
-		digits[brokenHourValues[1]],
-		digits[brokenHourValues[2]],
-		':',
-		digits[brokenMinuteValues[0]],
-		digits[brokenMinuteValues[1]],
-		':',
-		digits[brokenSecondsValues[0]],
-		digits[brokenSecondsValues[1]],
-	};
-	nocashMessage(message);
 }
 
 void InitBackgrounds(){
@@ -299,10 +292,53 @@ void InitSprites(){
 
 	for(int i = 1; i <= 2; i++){
 		InitTimerDisplays(i, 0);
+		InitUnderlines(i, 0);	
 	}
-
+	
 	InitIndicatorSprites();
 
+}
+
+void InitUnderlines(int player, int screen){
+	for(int i = 0; i < 9; i++){
+		int id  = 20 + (10 * player) + i;
+		NF_LoadSpriteGfx(
+			"sprites/underline_gfx",
+			id,
+			16,
+			16
+		);
+		NF_LoadSpritePal(
+			"sprites/underline_gfx",
+			id
+		);
+		NF_VramSpriteGfx(
+			screen,
+			id,
+			id,
+			true
+		);
+		NF_VramSpritePal(
+			screen,
+			id,
+			10
+		);
+	}
+	for(int i = 0; i < 9; i++){
+		int id = 20 + (10 * player) + i;
+		int offset = 0;
+		if (player == 2){
+			offset = 32;
+		}
+		NF_CreateSprite(screen, id, id, 10, (16 * (i + 1)) + (1+i), (48 * player) + 32 + offset);
+	}
+}
+
+void SetUnderlines(int player, int screen, int state){
+	for(int i = 0; i <=8; i++){
+		int id = 20 + (10 * player) + 1;
+		NF_SpriteFrame(0, id, 1);
+	}
 }
 
 void SetTimerStartupState(int player, int screen){

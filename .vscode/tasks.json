@@ -27,7 +27,7 @@
         },
         {
             "label": "Generate Assets",
-            "type" : "shell",
+            "type": "shell",
             "command": "./.vscode/Scripts/sh/convert_all.sh",
             "args": [
                 "${workspaceFolder}/graphics",
@@ -51,8 +51,8 @@
         {
             "label": "Run ROM (Desmume)",
             "type": "shell",
-            "linux":{
-                "command": "desmume ${workspaceFolder}/GoTimerPlus.nds",
+            "linux": {
+                "command": "desmume ${workspaceFolder}/GoTimerPlus.nds"
             },
             "group": {
                 "kind": "test",
@@ -64,10 +64,18 @@
             "dependsOrder": "sequence"
         },
         {
+            "label": "[Wine] Run ROM (NO$GBA)",
+            "type": "shell",
+            "linux": {
+                "command": "wine ~/.local/bin/NO\\$GBA.exe"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Copy Build to SD Card",
             "type": "shell",
-            "linux":{
-                "command": ".vscode/copy_to_sd_linux.sh",
+            "linux": {
+                "command": ".vscode/copy_to_sd_linux.sh"
             },
             "args": [
                 "${workspaceFolder}/GoTimerPlus.nds",
@@ -86,11 +94,11 @@
         {
             "label": "[NDS] Convert Images of Type...",
             "type": "shell",
-            "linux":{
-                "command": ".vscode/Scripts/sh/convert_${input:imageType}.sh",
+            "linux": {
+                "command": ".vscode/Scripts/sh/convert_${input:imageType}.sh"
             },
-            "windows":{
-                "command": ".vscode/Scripts/batch/convert_${input:imageType}.sh",
+            "windows": {
+                "command": ".vscode/Scripts/batch/convert_${input:imageType}.sh"
             },
             "args": [
                 "${workspaceFolder}/graphics/${input:imageType}",

@@ -66,8 +66,6 @@ class Time
                         break;
                 }
             }
-            char message[2] = {digits[brokenMinutes[0]], digits[brokenMinutes[1]]};
-            nocashMessage(message);
             return brokenMinutes;
         }
 
@@ -84,8 +82,6 @@ class Time
                         break;
                 }
             }
-            char message[2] = {digits[brokenSeconds[0]], digits[brokenSeconds[1]]};
-            nocashMessage(message);
             return brokenSeconds;
         }
 

@@ -189,6 +189,26 @@ NF_Error(112, “Sprite”, 37);
 ```
 Generates a error with code 112, with the text “sprite” as description and a value of 37.
 
+**Error Codes**
+* 101: File not found
+* 102: Out of memory
+* 103: There are no free slots
+* 104: Background not found
+* 105: Background not created
+* 106: Out of range
+* 107: Insufficient contiguous blocks in VRAM (Tiles)
+* 108: Insufficient contiguous blocks in VRAM (Maps)
+* 109: Id busy (already in use)
+* 110: Id not loaded (in RAM)
+* 111: Id not in VRAM
+* 112: Sprite not created
+* 113: Insufficient VRAM memory
+* 114: Text layer does not exist
+* 115: Unsupported background measurements (not multiples of 256)
+* 116: File too large
+* 117: Incorrect affine fund measurements
+* 118: Wrong affine background creation layer
+
 ## NF_SetRootFolder
 ```c++
 void NF_SetRootFolder( 
