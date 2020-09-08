@@ -28,7 +28,7 @@ GoTimerPlus:
 	right side.
 
 	center of top screen will show current turn, as well as an icon to indicate 
-	timeout-warning sounds being active. Also, top center will be a display to
+	timeout-warning sounds being active. Also, top right will be a display to
 	show the current system clock time.
 
 	Graphics for the top screen will be styled to try and match that of a real
@@ -107,6 +107,7 @@ void InitSprites();
 void InitTimerDisplays(int player, int screen);
 void InitUnderlines(int player, int screen);
 void InitIndicatorSprites();
+void InitPlayerTitles(int player, int screen);
 void SetTimerStartupState(int player, int screen);
 void SetUnderlines(int player, int screen, int state);
 void UpdateTimerDigits(int *brokenHourValues, int *brokenMinuteValues, int *brokenSecondsValues, int player, int screen);
@@ -123,8 +124,8 @@ int main(void) {
 	SetTimerStartupState(1, 0);
 	SetTimerStartupState(2, 0);
 
-	Time p1mainTime = Time(0, 0, 0);
-	Time p2mainTime = Time(0, 0, 0);
+	Time p1mainTime = Time(2, 0, 0);
+	Time p2mainTime = Time(2, 0, 0);
 
 	static int *p1BrokenTime[3] = {
 		{p1mainTime.getBrokenHours()},
@@ -143,13 +144,26 @@ int main(void) {
 
 	UpdateTimerDigits(p2BrokenTime[0], p2BrokenTime[1], p2BrokenTime[2], 2, 0);
 	
-	// SetUnderlines(2, 0, 1);
+	SetUnderlines(1, 0, 1);
+	SetUnderlines(2, 0, 1);
+	int turn = 0;
 
 	do{
 		int keys_pressed, keys_released;
 		scanKeys();
 		keys_pressed = keysDown();
 		keys_released = keysUp();
+
+		//at this point, get keypresses. First side to press will be player 2
+		//mark player 1 and player 2 with the appropriate button icon based on press
+		// ie: if player 2 pressed ABXY, player 1 is CROSS, and player 2 is ABXY
+		// Store who is player 1 in variable
+		// Turns start out at 1
+		// set underline of player 2 off, and player 1 on (on is 0, off is 1). TODO: Figure this shit out. Want 1 to be on, 0 to be off. shit's confusing.
+		// set active player to player 1
+		// begin ticking down time for active player
+		// if active player's button is pressed, put elapsed vblank time into variable; this is used MS from this turn.
+		// Switch active player.
 		
 		NF_SpriteOamSet(0);
 		swiWaitForVBlank();
@@ -171,6 +185,17 @@ void Initialize(){
 
 void InitTimerDisplays(int player, int screen){
 
+	NF_LoadSpritePal(
+			"sprites/large_numbers",
+			34 + player
+		);
+
+	NF_VramSpritePal(
+			screen,
+			34 + player,
+			13 + player
+		);
+
 	for(int i = 0; i < 9; i++){
 		int id = 10 * player + i;
 		NF_LoadSpriteGfx(
@@ -178,21 +203,14 @@ void InitTimerDisplays(int player, int screen){
 			id,
 			16,
 			32);
-		NF_LoadSpritePal(
-			"sprites/large_numbers",
-			id
-		);
+		
 		NF_VramSpriteGfx(
 			screen,
 			id,
 			id,
 			true
 		);
-		NF_VramSpritePal(
-			screen,
-			id,
-			10
-		);
+		
 	}
 
 	for(int i = 0; i < 9; i++){
@@ -201,7 +219,7 @@ void InitTimerDisplays(int player, int screen){
 		if(player == 2){
 			offset = 32;
 		}
-		NF_CreateSprite(screen, id, id, 10, (16*(i+1)) + (1+i), 48 * player + offset);
+		NF_CreateSprite(screen, id, id, 13 + player, (16*(i+1)) + (1+i), 48 * player + offset);
 	}
 }
 
@@ -259,21 +277,21 @@ void InitIndicatorSprites(){
 	
 	//Cross Indicator
 	NF_LoadSpriteGfx("sprites/topabxy", 1, 16, 16);
-	NF_LoadSpritePal("sprites/topabxy", 1);
+	// NF_LoadSpritePal("sprites/topabxy", 1);
 	NF_VramSpriteGfx(0, 1, 1, false);
-	NF_VramSpritePal(0, 1, 1);
+	NF_VramSpritePal(0, 0, 1);
 
 	//ABXY Indicator
 	NF_LoadSpriteGfx("sprites/topcross", 2, 16, 16);
-	NF_LoadSpritePal("sprites/topcross", 2);
+	// NF_LoadSpritePal("sprites/topcross", 2);
 	NF_VramSpriteGfx(0, 2, 2, false);
-	NF_VramSpritePal(0, 2, 2);
+	NF_VramSpritePal(0, 0, 2);
 	
 	//Cross Indicator
 	NF_LoadSpriteGfx("sprites/topabxy", 3, 16, 16);
-	NF_LoadSpritePal("sprites/topabxy", 3);
+	// NF_LoadSpritePal("sprites/topabxy", 3);
 	NF_VramSpriteGfx(0, 3, 3, false);
-	NF_VramSpritePal(0, 3, 3);
+	NF_VramSpritePal(0, 0, 3);
 
 	s16 spritexy[4][2] = {
 		{138,  32}, 
@@ -292,7 +310,8 @@ void InitSprites(){
 
 	for(int i = 1; i <= 2; i++){
 		InitTimerDisplays(i, 0);
-		InitUnderlines(i, 0);	
+		InitUnderlines(i, 0);
+		InitPlayerTitles(i, 0);	
 	}
 	
 	InitIndicatorSprites();
@@ -300,6 +319,15 @@ void InitSprites(){
 }
 
 void InitUnderlines(int player, int screen){
+	NF_LoadSpritePal(
+			"sprites/underline_gfx",
+			9 + player
+		);
+	NF_VramSpritePal(
+		screen,
+		9 + player,
+		5 + player
+	);
 	for(int i = 0; i < 9; i++){
 		int id  = 20 + (10 * player) + i;
 		NF_LoadSpriteGfx(
@@ -308,21 +336,14 @@ void InitUnderlines(int player, int screen){
 			16,
 			16
 		);
-		NF_LoadSpritePal(
-			"sprites/underline_gfx",
-			id
-		);
+		
 		NF_VramSpriteGfx(
 			screen,
 			id,
 			id,
 			true
 		);
-		NF_VramSpritePal(
-			screen,
-			id,
-			10
-		);
+		
 	}
 	for(int i = 0; i < 9; i++){
 		int id = 20 + (10 * player) + i;
@@ -330,14 +351,91 @@ void InitUnderlines(int player, int screen){
 		if (player == 2){
 			offset = 32;
 		}
-		NF_CreateSprite(screen, id, id, 10, (16 * (i + 1)) + (1+i), (48 * player) + 32 + offset);
+		NF_CreateSprite(screen, id, id, 5 + player, (16 * (i + 1)) + (1+i), (48 * player) + 32 + offset);
+	}
+}
+
+void InitPlayerTitles(int player, int screen){
+	NF_LoadSpritePal(
+			"sprites/player_title",
+			4 + player
+		);
+	NF_VramSpritePal(
+			screen,
+			4 + player,
+			11 + player
+		);
+	for(int i = 0; i < 6; i++){
+		int id = 0;
+		switch(player){
+			case 1:
+				id = 4 + i;
+				break;
+			case 2:
+				id = 50 + i;
+				break;
+		}
+		NF_LoadSpriteGfx(
+			"sprites/player_title",
+			id,
+			16,
+			16
+		);
+		
+		NF_VramSpriteGfx(
+			screen,
+			id,
+			id,
+			true
+		);
+		
+	}
+	
+	for(int i = 0; i < 6; i++){
+		int id = 0;
+		switch(player){
+			case 1:
+				id = 4 + i;
+				break;
+			case 2:
+				id = 50 + i;
+				break;
+		}
+		int offset = 0;
+		if (player == 2){
+			offset = 48;
+		}
+		NF_CreateSprite(screen, id, id, 11 + player, (16 * (i + 1)) + (1+i), (32 * player) + offset);
+	}
+	for(int i = 0; i < 6; i++){
+		int id = 0;
+		switch(player){
+			case 1:
+				id = 4 + i;
+				break;
+			case 2:
+				id = 50 + i;
+				break;
+		}
+		switch(player){
+			case 1:
+				NF_SpriteFrame(screen, id, i);
+				break;
+			case 2:
+				if(i == 5){
+					NF_SpriteFrame(screen, id, 6);
+				}
+				else{
+					NF_SpriteFrame(screen, id, i);
+				}
+		}
 	}
 }
 
 void SetUnderlines(int player, int screen, int state){
 	for(int i = 0; i <=8; i++){
-		int id = 20 + (10 * player) + 1;
-		NF_SpriteFrame(0, id, 1);
+		int id = 20 + (10 * player) + i;
+		NF_SpriteFrame(0, id, state);
 	}
 }
 

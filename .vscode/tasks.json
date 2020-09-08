@@ -61,7 +61,11 @@
             "dependsOn": [
                 "Make Project"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "presentation": {
+                "echo": false,
+                "reveal": "never"
+            }
         },
         {
             "label": "[Wine] Run ROM (NO$GBA)",
